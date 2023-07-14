@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,noarchive,nofollow,noimageindex">
+    <link type="text/css" href="style.css" rel="stylesheet">
+    <title>KGM - KTM映像確認ツール</title>
+</head>
+<body>
+    <noscript>お使いのブラウザではJavaScriptが有効になっていません。当ツールを使用するにはJavaScriptを有効にしてください。</noscript>
+    <div class="main-contents">
+        <div class="screens">
+            <div class="prosce-screen">
+                <!-- <img src="prosceniumScreen-safetyZone_2023.png"> -->
+                <video id="prosceVideo" playsinline muted autoplay>
+                    <source src="prosceniumScreen-safetyZone_2023_KTMcolor.mp4">
+                    <!-- 上から372px, 下から267px 切り取り-->
+                </video>
+            </div>
+            <div class="main-screen">
+                <!-- <img src="mainScreen-safetyZone_2023.png"> -->
+                <video id="mainVideo" playsinline muted autoplay>
+                    <source src="mainScreen-safetyZone_2023_KTMcolor.mp4">
+                </video>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="buttons">
+                <div class="buttons-play">
+                    <button id="play" disabled>同時再生</button>
+                
+
+                </div>
+                <div class="buttons-settings">
+                    <label for="selectMute"> 音声：</label>
+                    <select id="selectMute" disabled>
+                        <option value="noMute">両方とも出力</option>
+                        <option value="childMute">片方のみ出力</option>
+                        <option value="allMute">出力無し</option>
+                    </select>
+                    <button class="file-select">ファイルを開く...</button>
+                    <!-- inputはcssで隠してjavascriptからbuttonきっかけでclickイベント発火させる  -->
+                    <input
+                        type="file"
+                        id="fileselect"
+                        class="file-select"
+                        accept=""
+                        value="test"
+                        multiple
+                    >
+                    <button id="changeMainProsce" class="" disabled>prosce(上)↔main(下)</button>
+                </div>
+            </div>
+            <div class="info">
+                <p>prosce(上): <span class="info-prosce-filename"></span> (<span class="info-prosce-timecode">--:--:--:--</span>/<span class="info-prosce-duration">--:--:--:--</span>)<span class="info-prosce-host"></span></p>
+                <p>main(下): <span class="info-main-filename"></span> (<span class="info-main-timecode">--:--:--:--</span>/<span class="info-main-duration">--:--:--:--</span>)<span class="info-main-host"></span></p>
+            </div>
+        </div>
+        <div class="scroll-animation">
+            <span class="dragAndDropMsg">
+                <span class="nowrap">ここ</span>へ<span class="nowrap">ファイル</span>を<span class="nowrap">ドラッグ</span><span class="nowrap">アンド</span><span class="nowrap">ドロップ</span>
+            </span>
+            <svg class="arrows">
+                <path class="a1" d="M1 0 L30 32 L60 0"></path>
+                <path class="a2" d="M1 20 L30 52 L60 20"></path>
+                <path class="a3" d="M1 40 L30 72 L60 40"></path>
+            </svg>
+        </div>
+    </div>
+    <footer>KimIGaMIRU - Ki<dummy>mIT</dummy>oM<dummy2>I</dummy2>KU投影映像確認ツール v0.04</footer>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+</html>

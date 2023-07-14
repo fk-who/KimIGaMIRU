@@ -1,0 +1,222 @@
+:root {
+    --prosce-height: 441px;
+    --prosce-object-position-y: 374px;
+}
+
+/* スクロールバー 参考 https://zenn.dev/datsukan/articles/a2836960a88fb4 */
+::-webkit-scrollbar {
+    width: 16px;              /* スクロールバー全体の幅 */
+    background-color: black;   /* スクロールバーの背景色 */
+}
+  
+:hover ::-webkit-scrollbar-thumb {
+    border-radius: 10px;                      /* スクロールバーの丸み */
+    box-shadow: inset 0 0 10px 10px #464646 /*#909090*/ ;  /* スクロールバーの色 */
+    border: solid 4px transparent;            /* スクロールバーの左右の余白 */
+}
+
+:active ::-webkit-scrollbar-thumb { /* ページのどこかをクリックしている時 */
+    border-radius: 10px;                      /* スクロールバーの丸み */
+    box-shadow: inset 0 0 10px 10px #909090 /*#909090*/ ;  /* スクロールバーの色 */
+    border: solid 4px transparent;            /* スクロールバーの左右の余白 */
+}
+
+::-webkit-scrollbar{
+    color: black;
+}
+
+/* スクロールアニメーション */
+/* 参考 https://photopizza.design/css_prompt_scrolling/ */
+.arrows {
+    width: 62px;
+    height: 75px;
+    position: absolute;
+    left: 50%;
+    margin-left: -30px;
+    bottom: 20px;
+}
+
+.arrows path {
+    stroke: white;
+    fill: transparent;
+    stroke-width: 3px;  
+    animation: arrow 2s infinite;
+    -webkit-animation: arrow 2s infinite; 
+    filter: drop-shadow(0 0 0.02rem black);
+}
+
+@keyframes arrow
+{
+    0% {opacity:0}
+    40% {opacity:1}
+    80% {opacity:0}
+    100% {opacity:0}
+}
+
+@-webkit-keyframes arrow /*Safari and Chrome*/
+{
+    0% {opacity:0}
+    40% {opacity:1}
+    80% {opacity:0}
+    100% {opacity:0}
+}
+
+.arrows path.a1 {
+    animation-delay:-1s;
+    -webkit-animation-delay:-1s; /* Safari 和 Chrome */
+}
+
+.arrows path.a2 {
+    animation-delay:-0.5s;
+    -webkit-animation-delay:-0.5s; /* Safari 和 Chrome */
+}
+
+.arrows path.a3 { 
+    animation-delay:0s;
+    -webkit-animation-delay:0s; /* Safari 和 Chrome */
+}
+
+/* ドラッグアンドドロップメッセージ */
+span.dragAndDropMsg {
+    width: 90dvw;
+    position: absolute;
+    left: 50%;
+    text-align: center;
+    bottom: calc(40px + 1.4em + 0.5em);
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    filter: drop-shadow(0 0 0.15rem black);
+    font-size: 1.4em;
+}
+
+
+.nowrap{
+    white-space: nowrap;
+}
+
+body{
+    background-color: black;
+    color: white;
+    display: flex;
+    margin-top: 0;
+    flex-direction: column;
+    font-family: sans-serif;
+}
+
+div.main-contents{
+    display: flex;
+    flex-direction: column;
+}
+
+video{
+    min-width: 50%;
+    width: 100%;
+    max-width: 100%;
+    /* display: none; */
+}
+
+div.screens{
+    max-width: 100dvw;
+    height: 100dvh;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+}
+
+div.prosce-screen{
+    display: flex;
+    max-width: 100%;
+    /* height: 22.96875%; */
+    max-height: 32dvh;
+    aspect-ratio: 1/0.2296875;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.prosce-screen img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 1/0.2296875;
+    object-position: 0 58.653704%;
+    opacity: 0.5;
+    max-width: 100%;
+}
+
+.prosce-screen video{
+    aspect-ratio: 1/0.2296875;
+    object-fit: cover;
+    object-position: 0 58.653704%;
+    height: 100%;
+    width: 100%;
+    height: auto;
+}
+
+div.main-screen {
+    max-height: 68dvh;
+}
+
+.main-screen video{
+    width: 100%;
+    height: 100%;
+}
+
+.main-screen img{
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+}
+
+div.controls{
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+}
+
+div.buttons{
+    align-self: center;
+}
+
+div.buttons > div{
+    display: inline-block;
+    text-align: center;
+    margin: 0 0.5em;
+}
+
+div.controls > div.buttons-play > span.nowTimecode{
+    margin-right: 0.5ex;
+}
+
+button{
+    min-height: 2em;
+}
+
+input[type="file"]{
+    display: none; /* inputの代わりのボタンを配置 */
+}
+
+select{
+    min-height: 2em;
+}
+
+div.info{
+    align-self: center;
+    margin: 1em;
+    text-align: center;
+}
+
+div.info > p {
+    margin: 0.4em;
+}
+
+footer{
+    font-size: 80%;
+    color: darkgray;
+    align-self: center;
+    margin-top: 20px;
+}
