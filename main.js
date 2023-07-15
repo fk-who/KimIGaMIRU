@@ -155,14 +155,13 @@ function setVideo(files,callback){
             function selectMuteFunc(){
                 if (selectMuto.value == "oneMute"){ // 長い方である子動画の音を出すことで音声ブチ切りを再現
                     parentVideo.muted = true;
-                    parentVideo.volume = 0;
                     childVideo.muted = false;
-                    childVideo.volume = Math.min(parentVideo.volume*2, 1);
+                    childVideo.volume = Math.max(parentVideo.volume * 2, 0.1);
                 }else if(selectMuto.value == "noMute"){
                     parentVideo.muted = false;
-                    parentVideo.volume = parentVideo.volume / 2;
+                    parentVideo.volume = Math.max(parentVideo.volume / 2, 0.05);
                     childVideo.muted = false;
-                    childVideo.volume = parentVideo.volume / 2;
+                    childVideo.volume = Math.max(parentVideo, 0.05);
                 }else if(selectMuto.value == "allMute"){
                     parentVideo.muted = true;
                     childVideo.muted = true;
