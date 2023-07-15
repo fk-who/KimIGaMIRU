@@ -153,11 +153,11 @@ function setVideo(files,callback){
             selectMuto.disabled = false;
             selectMuto.addEventListener("change", selectMuteFunc);
             function selectMuteFunc(){
-                if (selectMuto.value == "childMute"){
-                    childVideo.muted = true;
-                    childVideo.volume = 0;
-                    parentVideo.muted = false;
-                    parentVideo.volume = Math.min(parentVideo.volume*2, 1);
+                if (selectMuto.value == "oneMute"){ // 長い方である子動画の音を出すことで音声ブチ切りを再現
+                    parentVideo.muted = true;
+                    parentVideo.volume = 0;
+                    childVideo.muted = false;
+                    childVideo.volume = Math.min(parentVideo.volume*2, 1);
                 }else if(selectMuto.value == "noMute"){
                     parentVideo.muted = false;
                     parentVideo.volume = parentVideo.volume / 2;
