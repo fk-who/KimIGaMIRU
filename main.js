@@ -1,4 +1,4 @@
-console.log("main.js v0.04");
+console.log("main.js v0.05");
 
 let FILES = 0;
 let CNT = [0, 0];
@@ -230,7 +230,7 @@ function dbg(){
     window.prompt(
         "1. 以下をコピーしてブラウザのアドレスバーに貼り付け\n2. 先頭の # を消して開く",
         `# javascript:((d)=>{${prosceCode}${mainCode}})(document);`
-    )
+    );
 }
 
 function fileSelectFunc(){
