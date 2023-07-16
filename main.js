@@ -161,7 +161,7 @@ function setVideo(files,callback){
                 changePlayPauseButtonStatus("play"); 
             });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
-            childVideo.addEventListener("wating", ()=> parentVideo.pause() );
+            childVideo.addEventListener("wating", ()=>{ parentVideo.pause(); console.log("waiting"); });
 
 
             // 動画シーク時の動作
@@ -174,19 +174,17 @@ function setVideo(files,callback){
             selectMute.disabled = false;
             selectMute.addEventListener("change", selectMuteFunc);
             parentVideo.addEventListener("volumechange", syncVolume);
-            function selectMuteFunc(){
-                console.log("selectMute change");
+            function selectMuteFunc(){ // モード変更時に親動画の音量は変えない、両方のミュートの切り替えと子動画の音量のみを変更
                 if (selectMute.value == "noMute"){
                     parentVideo.muted = false;
-                    parentVideo.volume = Math.max(childVideo.volume / 2, 0.05); // oneMute(もしくはallMute) → noMute なので今まで音出してたのは childVideo
+                    parentVideo.volume = Math.min(Math.max(parentVideo.volume, 0.05), 1); // parentVideoの音量が[0.05, 1]に収まるように
                     childVideo.muted = false;
-                    console.log(Math.max(parentVideo, 0.05));
-                    childVideo.volume = Math.max(parentVideo, 0.05);
+                    childVideo.volume = Math.max(parentVideo.volume, 0.05);
                 }else if (selectMute.value == "oneMute"){ 
                     // より動画時間が長い子動画の音を出すことで音声ブチ切りを再現 (動画時間が長い=短い方より曲が遅れて終わる と予想)
                     parentVideo.muted = true;
                     childVideo.muted = false;
-                    childVideo.volume = Math.max(parentVideo.volume * 2, 0.1);
+                    childVideo.volume = Math.min(Math.max(parentVideo.volume * 2, 0.1), 1); // [0.1,1]の範囲で 親動画の音量*2 にする
             }else if(selectMute.value == "allMute"){
                     parentVideo.muted = true;
                     childVideo.muted = true;
