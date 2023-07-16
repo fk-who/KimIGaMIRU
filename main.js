@@ -72,7 +72,7 @@ function setVideo(files,callback){
             let frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
             // let milliSec = (sec % 60 - rem) * 1000
             
-            return `${hour}:${min}:${rem}:${frame}`
+            return `${hour}:${min}:${rem}:${frame} ${sec}`
         }
         
         // 親子判定(長さが短い方が親)及びそれに付随する操作
@@ -123,25 +123,46 @@ function setVideo(files,callback){
             // 再生ボタン登録
             playButton.disabled = false;
             playButton.addEventListener("click", playButtonFunc);
-            function playButtonFunc() {
+            function playButtonFunc(Event) {
                 if (parentVideo.paused){
-                    videos.forEach(e => e.play());
-                    playButton.innerText = "一時停止";
+                    parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
                 }else{
-                    videos.forEach(e => e.pause());
-                    // ボタンでの一時停止後に同期処理
-                    childVideo.currentTime = parentVideo.currentTime;
-                    playButton.innerText = "同時再生";
+                    parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
+                }
+            }
+            function syncVideosCurrentTime(){
+                parentVideo.currentTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
+                childVideo.currentTime = parentVideo.currentTime;
+            }
+            function changePlayPauseButtonStatus(status){
+                if (status == "play"){
+                    playButton.innerText = "▶️ 同時再生";
+                }else if (status == "pause"){
+                    playButton.innerText = "⏸ 一時停止&ズレ修正";
                 }
             }
 
             // 親動画のコントロール操作監視
-            parentVideo.addEventListener("pause", ()=> childVideo.pause() );
-            parentVideo.addEventListener("play", ()=> childVideo.play() );
-            parentVideo.addEventListener("plaing", ()=> childVideo.play() );
-            parentVideo.addEventListener("waiting", ()=> childVideo.pause() );
+            parentVideo.addEventListener("pause", ()=>{ 
+                childVideo.pause(); 
+                syncVideosCurrentTime(); 
+                changePlayPauseButtonStatus("play");
+            });
+            parentVideo.addEventListener("play", ()=>{ 
+                childVideo.play(); 
+                changePlayPauseButtonStatus("pause");  
+            });
+            parentVideo.addEventListener("plaing", ()=>{
+                childVideo.play(); 
+                changePlayPauseButtonStatus("pause"); 
+            });
+            parentVideo.addEventListener("waiting", ()=>{ 
+                childVideo.pause(); 
+                changePlayPauseButtonStatus("play"); 
+            });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
             childVideo.addEventListener("wating", ()=> parentVideo.pause() );
+
 
             // 動画シーク時の動作
             parentVideo.addEventListener("seeking", ()=>{childVideo.currentTime = parentVideo.currentTime;}, false);
@@ -149,22 +170,31 @@ function setVideo(files,callback){
 
             // 音声切り替えプルダウン登録
             videos.forEach( (e) => e.volume = 0.5);
-            const selectMuto = document.getElementById("selectMute");
-            selectMuto.disabled = false;
-            selectMuto.addEventListener("change", selectMuteFunc);
+            const selectMute = document.getElementById("selectMute");
+            selectMute.disabled = false;
+            selectMute.addEventListener("change", selectMuteFunc);
+            parentVideo.addEventListener("volumechange", syncVolume);
             function selectMuteFunc(){
-                if (selectMuto.value == "oneMute"){ // 長い方である子動画の音を出すことで音声ブチ切りを再現
+                console.log("selectMute change");
+                if (selectMute.value == "noMute"){
+                    parentVideo.muted = false;
+                    parentVideo.volume = Math.max(childVideo.volume / 2, 0.05); // oneMute(もしくはallMute) → noMute なので今まで音出してたのは childVideo
+                    childVideo.muted = false;
+                    console.log(Math.max(parentVideo, 0.05));
+                    childVideo.volume = Math.max(parentVideo, 0.05);
+                }else if (selectMute.value == "oneMute"){ 
+                    // より動画時間が長い子動画の音を出すことで音声ブチ切りを再現 (動画時間が長い=短い方より曲が遅れて終わる と予想)
                     parentVideo.muted = true;
                     childVideo.muted = false;
                     childVideo.volume = Math.max(parentVideo.volume * 2, 0.1);
-                }else if(selectMuto.value == "noMute"){
-                    parentVideo.muted = false;
-                    parentVideo.volume = Math.max(parentVideo.volume / 2, 0.05);
-                    childVideo.muted = false;
-                    childVideo.volume = Math.max(parentVideo, 0.05);
-                }else if(selectMuto.value == "allMute"){
+            }else if(selectMute.value == "allMute"){
                     parentVideo.muted = true;
                     childVideo.muted = true;
+                }
+            }
+            function syncVolume(Event){
+                if (selectMute.value == "noMute"){ // 音声モードが両方出力のときに親動画と子動画の音量を同期させる
+                    childVideo.volume = parentVideo.volume;
                 }
             }
         });
