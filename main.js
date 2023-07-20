@@ -131,8 +131,9 @@ function setVideo(files,callback){
                 }
             }
             function syncVideosCurrentTime(){
-                parentVideo.currentTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
-                childVideo.currentTime = parentVideo.currentTime;
+                let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
+                parentVideo.currentTime = syncTime;
+                childVideo.currentTime = syncTime;
             }
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
