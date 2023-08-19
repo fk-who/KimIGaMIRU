@@ -1,7 +1,9 @@
-console.log("main.js v0.05");
+console.log("main.js v0.055");
 
 let FILES = 0;
-let CNT = [0, 0];
+let CNT = [0, 0]; // 連打要素の連打数カウント用
+let STATUS = "pause"; // いるこれ?
+let CONTROLBYUSER = true;
 
 function fileSelect(e){
     let files = Array.from(e.target.files);
@@ -65,12 +67,21 @@ function setVideo(files,callback){
 
         // 動画時間表示のためsecからタイムコードへ変換する関数を定義
         function secToTimecode(sec){
+            let hour, min, rem, frame = "";
             // 参考 https://1-notes.com/javascript-convert-seconds/
-            let hour = ( '00' + Math.floor(sec / 3600) ).slice( -2 ) ;  // 3600秒=1時間
-            let min = ( '00' + Math.floor(sec % 3600 / 60) ).slice( -2 );
-            let rem = ( '00' + Math.floor(sec % 60) ).slice( -2 );
-            let frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
-            // let milliSec = (sec % 60 - rem) * 1000
+            if (parseFloat(sec)>=0){
+                hour = ( '00' + Math.floor(sec / 3600) ).slice( -2 ) ;  // 3600秒=1時間
+                min = ( '00' + Math.floor(sec % 3600 / 60) ).slice( -2 );
+                rem = ( '00' + Math.floor(sec % 60) ).slice( -2 );
+                frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
+                // let milliSec = (sec % 60 - rem) * 1000
+            }else if(parseFloat(sec)<0){
+                sec = sec * (-1);
+                hour = "-" + ( '00' + Math.floor(sec / 3600) ).slice( -2 ) ;  // 3600秒=1時間
+                min = ( '00' + Math.floor(sec % 3600 / 60) ).slice( -2 );
+                rem = ( '00' + Math.floor(sec % 60) ).slice( -2 );
+                frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
+            }
             
             return `${hour}:${min}:${rem}:${frame} ${sec}`
         }
@@ -108,9 +119,13 @@ function setVideo(files,callback){
             if (prosce.duration <= main.duration){
                 parentVideo = prosce;
                 childVideo = main;
+                parentInfoStatus = document.querySelector("span.info-prosce-status");
+                childInfoStatus = document.querySelector("span.info-main-status");
             }else{
                 parentVideo = main;
                 childVideo = prosce;
+                parentInfoStatus = document.querySelector("span.info-main-status");
+                childInfoStatus = document.querySelector("span.info-prosce-status");
             }
             console.log("parent:", parentVideo);
             parentVideo.controls = true;
@@ -124,9 +139,11 @@ function setVideo(files,callback){
             playButton.disabled = false;
             playButton.addEventListener("click", playButtonFunc);
             function playButtonFunc(Event) {
-                if (parentVideo.paused){
+                if (STATUS == "pause"){
+                    CONTROLBYUSER = true;
                     parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
-                }else{
+                }else if (STATUS == "play"){
+                    CONTROLBYUSER = true;
                     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
                 }
             }
@@ -145,25 +162,74 @@ function setVideo(files,callback){
 
             // 親動画のコントロール操作監視
             parentVideo.addEventListener("pause", ()=>{ 
-                childVideo.pause(); 
-                syncVideosCurrentTime(); 
-                changePlayPauseButtonStatus("play");
+                if (CONTROLBYUSER){
+                    STATUS = "pause";
+                    changePlayPauseButtonStatus("play");
+                }
+                childVideo.pause();
+                syncVideosCurrentTime();
+                CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("play", ()=>{ 
-                childVideo.play(); 
-                changePlayPauseButtonStatus("pause");  
-            });
-            parentVideo.addEventListener("plaing", ()=>{
-                childVideo.play(); 
-                changePlayPauseButtonStatus("pause"); 
-            });
-            parentVideo.addEventListener("waiting", ()=>{ 
-                childVideo.pause(); 
-                changePlayPauseButtonStatus("play"); 
+                childVideo.play();
+                if (CONTROLBYUSER){
+                    STATUS = "play";
+                    changePlayPauseButtonStatus("pause");
+                }
+                CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
-            childVideo.addEventListener("wating", ()=>{ parentVideo.pause(); console.log("waiting"); });
 
+            // 読み込みによる再生停止&再開の連動
+            parentVideo.addEventListener("waiting", ()=>{
+                CONTROLBYUSER = false;
+                childVideo.pause();
+                // changePlayPauseButtonStatus("play"); 
+                parentInfoStatus.innerText = "waiting";
+            });
+            parentVideo.addEventListener("playing", ()=>{
+                CONTROLBYUSER = false;
+                childVideo.play(); 
+                parentInfoStatus.innerText = "";
+            });
+            parentVideo.addEventListener("canplay", ()=>{
+                // CONTROLBYUSER = false;
+                // childVideo.play();
+                if(STATUS == "play"){
+                    //childVideo.play();
+                }
+                parentInfoStatus.innerText = "";
+            });
+            childVideo.addEventListener("waiting", ()=>{
+                CONTROLBYUSER = false;
+                parentVideo.pause();
+                childInfoStatus.innerText = "waiting";
+            });
+            childVideo.addEventListener("playing", ()=>{
+                CONTROLBYUSER = false;
+                parentVideo.play();
+                childInfoStatus.innerText = "";
+            });
+            childVideo.addEventListener("canplay", ()=>{
+                // CONTROLBYUSER = false;
+                // parentVideo.play();
+                if(STATUS == "play"){
+                    //parentVideo.play();
+                }
+                childInfoStatus.innerText = "";
+            });
+
+            //video要素のEventをデバッグ
+            function dbgEventFunc(e){
+                let now = new Date();
+                console.log(`${e.type} ${e.target.id} ${STATUS} ${CONTROLBYUSER} ${now.getSeconds()}`);
+            }
+            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting"];
+            document.querySelectorAll("video").forEach( v =>{
+                dbgEventList.forEach( dbgEvent =>{
+                    v.addEventListener(dbgEvent, dbgEventFunc);
+                });
+            });
 
             // 動画シーク時の動作
             parentVideo.addEventListener("seeking", ()=>{childVideo.currentTime = parentVideo.currentTime;}, false);
@@ -197,9 +263,20 @@ function setVideo(files,callback){
                 }
             }
         });
+
         // 再生時間表示
-        prosce.addEventListener("timeupdate", ()=>{document.querySelector("span.info-prosce-timecode").innerText = secToTimecode(prosce.currentTime);}, false);
-        main.addEventListener("timeupdate", ()=>{document.querySelector("span.info-main-timecode").innerText = secToTimecode(main.currentTime);}, false);
+        prosce.addEventListener("timeupdate", ()=>{
+            document.querySelector("span.info-prosce-timecode").innerText = secToTimecode(prosce.currentTime);
+            updateTimeDifference();
+        }, false);
+        main.addEventListener("timeupdate", ()=>{
+            document.querySelector("span.info-main-timecode").innerText = secToTimecode(main.currentTime);
+            updateTimeDifference();
+        }, false);
+        //   動画時間の差を更新
+        function updateTimeDifference(){
+            document.querySelector("span.info-time-difference").innerText = secToTimecode(prosce.currentTime - main.currentTime);
+        }
 
         // 動画入れ替えbutton登録(一つも動画が読み込まれていない場合を除く)
         if (files.length != 0){
