@@ -82,12 +82,13 @@ span.dragAndDropMsg {
     position: absolute;
     left: 50%;
     text-align: center;
-    bottom: calc(40px + 1.4em + 0.5em);
+    font-size: 1.3em;
+    letter-spacing: 0.05em;
+    bottom: calc(40px + 1.3em + 30px);
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
     filter: drop-shadow(0 0 0.15rem black);
-    font-size: 1.4em;
 }
 
 
@@ -223,4 +224,5 @@ footer{
     color: darkgray;
     align-self: center;
     margin-top: 20px;
+    letter-spacing: 0.04em;
 }
