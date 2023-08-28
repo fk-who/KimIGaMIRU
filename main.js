@@ -15,6 +15,8 @@ function setVideo(files,callback){
     const main =  document.getElementById("mainVideo");
     const videos = document.querySelectorAll("video");
     const playButton = document.getElementById("play");
+    const changeButton = document.getElementById("changeMainProsce");
+    const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -155,8 +157,10 @@ function setVideo(files,callback){
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
+                    changeButton.disabled = false;
                 }else if (status == "pause"){
                     playButton.innerText = "⏸ 一時停止&ズレ修正";
+                    changeButton.disabled = true;
                 }
             }
 
@@ -195,8 +199,8 @@ function setVideo(files,callback){
             parentVideo.addEventListener("canplay", ()=>{
                 // CONTROLBYUSER = false;
                 // childVideo.play();
-                if(STATUS == "play"){
-                    //childVideo.play();
+                if(playWhenCanplayEventCheck.checked){
+                    childVideo.play();
                 }
                 parentInfoStatus.innerText = "";
             });
@@ -213,8 +217,8 @@ function setVideo(files,callback){
             childVideo.addEventListener("canplay", ()=>{
                 // CONTROLBYUSER = false;
                 // parentVideo.play();
-                if(STATUS == "play"){
-                    //parentVideo.play();
+                if(playWhenCanplayEventCheck.checked){
+                    parentVideo.play();
                 }
                 childInfoStatus.innerText = "";
             });
@@ -280,11 +284,13 @@ function setVideo(files,callback){
 
         // 動画入れ替えbutton登録(一つも動画が読み込まれていない場合を除く)
         if (files.length != 0){
-            const changeButton = document.getElementById("changeMainProsce");
             changeButton.addEventListener("click",()=>{
-                // playButton.removeEventListener("click", playButtonFunc);
-                files.reverse();
-                setVideo(files);
+                console.log(prosce.paused && main.paused);
+                if (prosce.paused && main.paused){
+                    files.reverse();
+                    setVideo(files);
+                    changeButton.disabled = true;
+                }
             }, {once: true});
             changeButton.disabled = false;
         }
