@@ -76,11 +76,11 @@ function setVideo(files,callback){
                 frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
                 // let milliSec = (sec % 60 - rem) * 1000
             }else if(parseFloat(sec)<0){
-                sec = sec * (-1);
-                hour = "-" + ( '00' + Math.floor(sec / 3600) ).slice( -2 ) ;  // 3600秒=1時間
-                min = ( '00' + Math.floor(sec % 3600 / 60) ).slice( -2 );
-                rem = ( '00' + Math.floor(sec % 60) ).slice( -2 );
-                frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
+                secForCalc = sec * (-1);
+                hour = "-" + ( '00' + Math.floor(secForCalc / 3600) ).slice( -2 ) ;  // 3600秒=1時間
+                min = ( '00' + Math.floor(secForCalc % 3600 / 60) ).slice( -2 );
+                rem = ( '00' + Math.floor(secForCalc % 60) ).slice( -2 );
+                frame = ( '00' + Math.floor((secForCalc % 60 - rem) * 60) ).slice( -2 );
             }
             
             return `${hour}:${min}:${rem}:${frame} ${sec}`
