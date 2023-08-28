@@ -295,6 +295,17 @@ function setVideo(files,callback){
             changeButton.disabled = false;
         }
 
+        // 再生チェックボックスの設定
+        playWhenCanplayEventCheck.addEventListener("change", ()=>{
+            if (playWhenCanplayEventCheck.checked){
+                // 再生する チェックされたとき
+                parentVideo.play();
+            }else{
+                // 再生する チェック外された時
+                parentVideo.pause();
+            }
+        });
+
         // ファイル選択ボタンを再読み込みボタンへ変更
         document.querySelector("button.file-select").innerText = "リセット";
         document.querySelector("button.file-select").removeEventListener("click", fileSelectFunc);
