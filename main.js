@@ -173,9 +173,7 @@ function setVideo(files,callback){
                     // 再生する チェック外された時
                     parentVideo.pause();
                     changePlayPauseButtonStatus("play");
-                    if (autoSyncCheck.checked){
-                        syncVideosCurrentTime();
-                    }
+                    syncVideosCurrentTime();
                     changeButton.disabled = false;
                 }
             });
@@ -313,7 +311,7 @@ function setVideo(files,callback){
             let timeDifference = prosce.currentTime - main.currentTime;
             document.querySelector("span.info-time-difference").innerText = secToTimecode(timeDifference);
             // ズレが大きいとき自動で修正
-            if ((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)){
+            if (((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)) && autoSyncCheck.checked){
                 console.log("ズレ修正 " + timeDifference);
                 syncVideosCurrentTime();
             }
