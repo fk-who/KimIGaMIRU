@@ -96,6 +96,10 @@ span.dragAndDropMsg {
     white-space: nowrap;
 }
 
+.nodisplay{
+    display: none;
+}
+
 body{
     background-color: black;
     color: white;
