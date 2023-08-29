@@ -149,11 +149,8 @@ function setVideo(files,callback){
                 //     CONTROLBYUSER = true;
                 //     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
                 // }
-                syncVideosCurrentTime();
+                playWhenCanplayEventCheck.click();
             }
-            // 同期ボタン登録
-            syncButton.addEventListener("click", syncVideosCurrentTime);
-        
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
@@ -163,6 +160,9 @@ function setVideo(files,callback){
                     changeButton.disabled = true;
                 }
             }
+            
+            // 同期ボタン登録
+            syncButton.addEventListener("click", syncVideosCurrentTime);
 
             // 親動画のコントロール操作監視
             parentVideo.addEventListener("pause", ()=>{
