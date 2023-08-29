@@ -18,6 +18,7 @@ function setVideo(files,callback){
     const syncButton = document.getElementById("sync");
     const changeButton = document.getElementById("changeMainProsce");
     const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
+    const autoSyncCheck = document.getElementById("autoSync");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -172,7 +173,9 @@ function setVideo(files,callback){
                     // 再生する チェック外された時
                     parentVideo.pause();
                     changePlayPauseButtonStatus("play");
-                    syncVideosCurrentTime();
+                    if (autoSyncCheck.checked){
+                        syncVideosCurrentTime();
+                    }
                     changeButton.disabled = false;
                 }
             });
