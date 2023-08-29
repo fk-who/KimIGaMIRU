@@ -178,8 +178,9 @@ function setVideo(files,callback){
                 }
             });
 
-            // 同期ボタン登録
+            // ズレ修正ボタン登録
             syncButton.addEventListener("click", syncVideosCurrentTime);
+            syncButton.disabled = false;
 
             // 親動画のコントロール操作監視
             parentVideo.addEventListener("pause", ()=>{
