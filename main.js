@@ -15,6 +15,7 @@ function setVideo(files,callback){
     const main =  document.getElementById("mainVideo");
     const videos = document.querySelectorAll("video");
     const playButton = document.getElementById("play");
+    const syncButton = document.getElementById("sync");
     const changeButton = document.getElementById("changeMainProsce");
     const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
 
@@ -150,6 +151,9 @@ function setVideo(files,callback){
                 // }
                 syncVideosCurrentTime();
             }
+            // 同期ボタン登録
+            syncButton.addEventListener("click", syncVideosCurrentTime);
+        
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
