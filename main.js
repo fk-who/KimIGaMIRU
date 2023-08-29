@@ -158,7 +158,7 @@ function setVideo(files,callback){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
                 }else if (status == "pause"){
-                    playButton.innerText = "⏸ 一時停止&ズレ修正";
+                    playButton.innerText = "⏸ 一時停止";
                 }
             }
             
