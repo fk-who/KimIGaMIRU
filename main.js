@@ -313,6 +313,7 @@ function setVideo(files,callback){
             }else{
                 // 再生する チェック外された時
                 parentVideo.pause();
+                syncVideosCurrentTime();
             }
         });
 
