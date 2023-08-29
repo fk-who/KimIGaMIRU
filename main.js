@@ -161,7 +161,7 @@ function setVideo(files,callback){
             }
 
             // 親動画のコントロール操作監視
-            parentVideo.addEventListener("pause", ()=>{ 
+            parentVideo.addEventListener("pause", ()=>{
                 // if (CONTROLBYUSER){
                 //     STATUS = "pause";
                 //     changePlayPauseButtonStatus("play");
@@ -172,6 +172,9 @@ function setVideo(files,callback){
             });
             parentVideo.addEventListener("play", ()=>{ 
                 childVideo.play();
+                if (!playWhenCanplayEventCheck.checked){
+                    playWhenCanplayEventCheck.checked = true;
+                }
                 // if (CONTROLBYUSER){
                 //     STATUS = "play";
                 //     changePlayPauseButtonStatus("pause");
