@@ -181,12 +181,15 @@ div.controls{
 
 div.buttons{
     align-self: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 div.buttons > div{
     display: inline-block;
     text-align: center;
-    margin: 0 0.5em;
+    margin: 0.2em 0.5em;
 }
 
 div.controls > div.buttons-play > span.nowTimecode{
