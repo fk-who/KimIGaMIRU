@@ -28,8 +28,9 @@
             <div class="buttons">
                 <div class="buttons-play">
                     <button id="play" disabled>▶️ 同時再生</button>
-                
-
+                    <input type="checkbox" id="playWhenCanplayEvent" name="再生">
+                    <label for="playWhenCanplayEvent">再生する</label>                
+                    <button id="sync">ズレ修正</button>
                 </div>
                 <div class="buttons-settings">
                     <label for="selectMute"> 音声：</label>
@@ -49,8 +50,6 @@
                         multiple
                     >
                     <button id="changeMainProsce" class="" disabled>prosce(上)↔main(下)</button>
-                    <input type="checkbox" id="playWhenCanplayEvent" name="自動再生">
-                    <label for="playWhenCanplayEvent">再生する</label>
                 </div>
             </div>
             <div class="info">
