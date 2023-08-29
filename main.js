@@ -39,7 +39,6 @@ function setVideo(files,callback){
         document.querySelectorAll("input[type='file']").forEach( ()=> {
             self.addEventListener("change", (e)=>{
                 let newFiles = [files[0], e.target.files[0]];
-                // playButton.removeEventListener("click", playButtonFunc);
                 setVideo(newFiles);
             }, {once: true});
         });
@@ -137,7 +136,7 @@ function setVideo(files,callback){
             // 子動画を連打するとcontrol表示
             childVideo.addEventListener("click",()=>{
                 (CNT[1] > 9)? childVideo.controls = true : CNT[1]++;
-            }, false)
+            }, false);
         }).then(()=>{  // 親子判定後にする操作
             // 再生ボタン有効化
             playButton.disabled = false;
@@ -185,7 +184,6 @@ function setVideo(files,callback){
             // 読み込みによる再生停止&再開の連動
             parentVideo.addEventListener("waiting", ()=>{
                 childVideo.pause();
-                // changePlayPauseButtonStatus("play"); 
                 parentInfoStatus.innerText = "waiting";
             });
             parentVideo.addEventListener("playing", ()=>{
@@ -193,9 +191,7 @@ function setVideo(files,callback){
                 parentInfoStatus.innerText = "";
             });
             parentVideo.addEventListener("canplay", ()=>{
-                // childVideo.play();
                 if(playWhenCanplayEventCheck.checked){
-                    //childVideo.play();
                     parentVideo.play();
                 }
                 parentInfoStatus.innerText = "";
@@ -209,7 +205,6 @@ function setVideo(files,callback){
                 childInfoStatus.innerText = "";
             });
             childVideo.addEventListener("canplay", ()=>{
-                // parentVideo.play();
                 if(playWhenCanplayEventCheck.checked){
                     parentVideo.play();
                 }
@@ -292,14 +287,8 @@ function setVideo(files,callback){
         if (files.length != 0){
             changeButton.addEventListener("click",()=>{
                 if (prosce.paused && main.paused){
-                    // playButton.removeEventListener("click", playButtonFunc);
                     files.reverse();
-                    setVideo(files); // ここで二重にイベントリスナーを登録してしまうのでは？→対策として２行上で解除してから実行するようにした
-                    // let beforeProsceSrc = prosce.src;
-                    // let beforeMainSrc = main.src;
-                    // prosce.src = beforeMainSrc;
-                    // main.src = beforeProsceSrc;
-
+                    setVideo(files);
                     changeButton.disabled = true;
                 }
             }, {once: true});
