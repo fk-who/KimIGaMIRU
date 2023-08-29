@@ -154,13 +154,27 @@ function setVideo(files,callback){
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
-                    changeButton.disabled = false;
                 }else if (status == "pause"){
                     playButton.innerText = "⏸ 一時停止&ズレ修正";
-                    changeButton.disabled = true;
                 }
             }
             
+            // 再生チェックボックスの設定
+            playWhenCanplayEventCheck.addEventListener("change", ()=>{
+                if (playWhenCanplayEventCheck.checked){
+                    // 再生する チェックされたとき
+                    parentVideo.play();
+                    changePlayPauseButtonStatus("pause");
+                    changeButton.disabled = true;
+                }else{
+                    // 再生する チェック外された時
+                    parentVideo.pause();
+                    changePlayPauseButtonStatus("play");
+                    syncVideosCurrentTime();
+                    changeButton.disabled = false;
+                }
+            });
+
             // 同期ボタン登録
             syncButton.addEventListener("click", syncVideosCurrentTime);
 
@@ -177,7 +191,8 @@ function setVideo(files,callback){
             parentVideo.addEventListener("play", ()=>{ 
                 childVideo.play();
                 if (!playWhenCanplayEventCheck.checked){
-                    playWhenCanplayEventCheck.checked = true;
+                    // playWhenCanplayEventCheck.checked = true;
+                    playWhenCanplayEventCheck.click();
                 }
                 // if (CONTROLBYUSER){
                 //     STATUS = "play";
@@ -302,27 +317,14 @@ function setVideo(files,callback){
         // 動画入れ替えbutton登録(一つも動画が読み込まれていない場合を除く)
         if (files.length != 0){
             changeButton.addEventListener("click",()=>{
-                console.log(prosce.paused && main.paused);
                 if (prosce.paused && main.paused){
                     files.reverse();
-                    setVideo(files);
+                    setVideo(files); // ここで二重にイベントリスナーを登録してしまうのでは？
                     changeButton.disabled = true;
                 }
             }, {once: true});
             changeButton.disabled = false;
         }
-
-        // 再生チェックボックスの設定
-        playWhenCanplayEventCheck.addEventListener("change", ()=>{
-            if (playWhenCanplayEventCheck.checked){
-                // 再生する チェックされたとき
-                parentVideo.play();
-            }else{
-                // 再生する チェック外された時
-                parentVideo.pause();
-                syncVideosCurrentTime();
-            }
-        });
 
         // ファイル選択ボタンを再読み込みボタンへ変更
         document.querySelector("button.file-select").innerText = "リセット";
