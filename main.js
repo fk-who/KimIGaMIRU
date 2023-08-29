@@ -2,8 +2,6 @@ console.log("main.js v0.055");
 
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
-let STATUS = "pause"; // いるこれ?
-let CONTROLBYUSER = true;
 
 function fileSelect(e){
     let files = Array.from(e.target.files);
@@ -173,42 +171,28 @@ function setVideo(files,callback){
 
             // 親動画のコントロール操作監視
             parentVideo.addEventListener("pause", ()=>{
-                // if (CONTROLBYUSER){
-                //     STATUS = "pause";
-                //     changePlayPauseButtonStatus("play");
-                // }
                 childVideo.pause();
-                // syncVideosCurrentTime();
-                // CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("play", ()=>{ 
                 childVideo.play();
                 if (!playWhenCanplayEventCheck.checked){
                     // playWhenCanplayEventCheck.checked = true;
-                    playWhenCanplayEventCheck.click();
+                    playWhenCanplayEventCheck.click(); // clickじゃないとイベントが発火しない
                 }
-                // if (CONTROLBYUSER){
-                //     STATUS = "play";
-                //     changePlayPauseButtonStatus("pause");
-                // }
-                // CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
 
             // 読み込みによる再生停止&再開の連動
             parentVideo.addEventListener("waiting", ()=>{
-                // CONTROLBYUSER = false;
                 childVideo.pause();
                 // changePlayPauseButtonStatus("play"); 
                 parentInfoStatus.innerText = "waiting";
             });
             parentVideo.addEventListener("playing", ()=>{
-                // CONTROLBYUSER = false;
                 childVideo.play(); 
                 parentInfoStatus.innerText = "";
             });
             parentVideo.addEventListener("canplay", ()=>{
-                // CONTROLBYUSER = false;
                 // childVideo.play();
                 if(playWhenCanplayEventCheck.checked){
                     //childVideo.play();
@@ -217,17 +201,14 @@ function setVideo(files,callback){
                 parentInfoStatus.innerText = "";
             });
             childVideo.addEventListener("waiting", ()=>{
-                // CONTROLBYUSER = false;
                 parentVideo.pause();
                 childInfoStatus.innerText = "waiting";
             });
             childVideo.addEventListener("playing", ()=>{
-                // CONTROLBYUSER = false;
                 parentVideo.play();
                 childInfoStatus.innerText = "";
             });
             childVideo.addEventListener("canplay", ()=>{
-                // CONTROLBYUSER = false;
                 // parentVideo.play();
                 if(playWhenCanplayEventCheck.checked){
                     parentVideo.play();
@@ -238,7 +219,7 @@ function setVideo(files,callback){
             //video要素のEventをデバッグ
             function dbgEventFunc(e){
                 let now = new Date();
-                console.log(`${e.type} ${e.target.id} ${STATUS} ${CONTROLBYUSER} ${now.getSeconds()}`);
+                console.log(`${e.type} ${e.target.id} ${now.getSeconds()}`);
             }
             let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting", "seeking", "seeked"];
             document.querySelectorAll("video").forEach( v =>{
