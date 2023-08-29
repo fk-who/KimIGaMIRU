@@ -141,18 +141,14 @@ function setVideo(files,callback){
             playButton.disabled = false;
             playButton.addEventListener("click", playButtonFunc);
             function playButtonFunc(Event) {
-                if (STATUS == "pause"){
-                    CONTROLBYUSER = true;
-                    parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
-                }else if (STATUS == "play"){
-                    CONTROLBYUSER = true;
-                    parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
-                }
-            }
-            function syncVideosCurrentTime(){
-                let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
-                parentVideo.currentTime = syncTime;
-                childVideo.currentTime = syncTime;
+                // if (STATUS == "pause"){
+                //     CONTROLBYUSER = true;
+                //     parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
+                // }else if (STATUS == "play"){
+                //     CONTROLBYUSER = true;
+                //     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
+                // }
+                syncVideosCurrentTime();
             }
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
@@ -166,33 +162,33 @@ function setVideo(files,callback){
 
             // 親動画のコントロール操作監視
             parentVideo.addEventListener("pause", ()=>{ 
-                if (CONTROLBYUSER){
-                    STATUS = "pause";
-                    changePlayPauseButtonStatus("play");
-                }
+                // if (CONTROLBYUSER){
+                //     STATUS = "pause";
+                //     changePlayPauseButtonStatus("play");
+                // }
                 childVideo.pause();
-                syncVideosCurrentTime();
-                CONTROLBYUSER = true;
+                // syncVideosCurrentTime();
+                // CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("play", ()=>{ 
                 childVideo.play();
-                if (CONTROLBYUSER){
-                    STATUS = "play";
-                    changePlayPauseButtonStatus("pause");
-                }
-                CONTROLBYUSER = true;
+                // if (CONTROLBYUSER){
+                //     STATUS = "play";
+                //     changePlayPauseButtonStatus("pause");
+                // }
+                // CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
 
             // 読み込みによる再生停止&再開の連動
             parentVideo.addEventListener("waiting", ()=>{
-                CONTROLBYUSER = false;
+                // CONTROLBYUSER = false;
                 childVideo.pause();
                 // changePlayPauseButtonStatus("play"); 
                 parentInfoStatus.innerText = "waiting";
             });
             parentVideo.addEventListener("playing", ()=>{
-                CONTROLBYUSER = false;
+                // CONTROLBYUSER = false;
                 childVideo.play(); 
                 parentInfoStatus.innerText = "";
             });
@@ -200,17 +196,18 @@ function setVideo(files,callback){
                 // CONTROLBYUSER = false;
                 // childVideo.play();
                 if(playWhenCanplayEventCheck.checked){
-                    childVideo.play();
+                    //childVideo.play();
+                    parentVideo.play();
                 }
                 parentInfoStatus.innerText = "";
             });
             childVideo.addEventListener("waiting", ()=>{
-                CONTROLBYUSER = false;
+                // CONTROLBYUSER = false;
                 parentVideo.pause();
                 childInfoStatus.innerText = "waiting";
             });
             childVideo.addEventListener("playing", ()=>{
-                CONTROLBYUSER = false;
+                // CONTROLBYUSER = false;
                 parentVideo.play();
                 childInfoStatus.innerText = "";
             });
@@ -228,7 +225,7 @@ function setVideo(files,callback){
                 let now = new Date();
                 console.log(`${e.type} ${e.target.id} ${STATUS} ${CONTROLBYUSER} ${now.getSeconds()}`);
             }
-            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting"];
+            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting", "seeking", "seeked"];
             document.querySelectorAll("video").forEach( v =>{
                 dbgEventList.forEach( dbgEvent =>{
                     v.addEventListener(dbgEvent, dbgEventFunc);
@@ -268,6 +265,13 @@ function setVideo(files,callback){
             }
         });
 
+        //ズレ修正処理
+        function syncVideosCurrentTime(){
+            let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
+            parentVideo.currentTime = syncTime;
+            childVideo.currentTime = syncTime;
+        }
+
         // 再生時間表示
         prosce.addEventListener("timeupdate", ()=>{
             document.querySelector("span.info-prosce-timecode").innerText = secToTimecode(prosce.currentTime);
@@ -279,7 +283,13 @@ function setVideo(files,callback){
         }, false);
         //   動画時間の差を更新
         function updateTimeDifference(){
-            document.querySelector("span.info-time-difference").innerText = secToTimecode(prosce.currentTime - main.currentTime);
+            let timeDifference = prosce.currentTime - main.currentTime;
+            document.querySelector("span.info-time-difference").innerText = secToTimecode(timeDifference);
+            // ズレが大きいとき自動で修正
+            if ((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)){
+                console.log("ズレ修正 " + timeDifference);
+                syncVideosCurrentTime();
+            }
         }
 
         // 動画入れ替えbutton登録(一つも動画が読み込まれていない場合を除く)
