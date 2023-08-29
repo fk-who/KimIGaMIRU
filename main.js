@@ -41,6 +41,7 @@ function setVideo(files,callback){
         document.querySelectorAll("input[type='file']").forEach( ()=> {
             self.addEventListener("change", (e)=>{
                 let newFiles = [files[0], e.target.files[0]];
+                // playButton.removeEventListener("click", playButtonFunc);
                 setVideo(newFiles);
             }, {once: true});
         });
@@ -90,17 +91,6 @@ function setVideo(files,callback){
             return `${hour}:${min}:${rem}:${frame} ${sec}`
         }
         
-        // 再生ボタン押下時の関数を定義(動画入れ替え時に解除できるようにここで定義)
-        function playButtonFunc(Event) {
-            // if (STATUS == "pause"){
-            //     CONTROLBYUSER = true;
-            //     parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
-            // }else if (STATUS == "play"){
-            //     CONTROLBYUSER = true;
-            //     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
-            // }
-            playWhenCanplayEventCheck.click();
-        }
 
         // 親子判定(長さが短い方が親)及びそれに付随する操作
         // promiseとpromise.allを使って、二つとも読み込まれる(loadedmetadataイベント)のを待つ
@@ -151,9 +141,8 @@ function setVideo(files,callback){
                 (CNT[1] > 9)? childVideo.controls = true : CNT[1]++;
             }, false)
         }).then(()=>{  // 親子判定後にする操作
-            // 再生ボタン登録
+            // 再生ボタン有効化
             playButton.disabled = false;
-            playButton.addEventListener("click", playButtonFunc);
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
@@ -322,7 +311,7 @@ function setVideo(files,callback){
         if (files.length != 0){
             changeButton.addEventListener("click",()=>{
                 if (prosce.paused && main.paused){
-                    playButton.removeEventListener("click", playButtonFunc);
+                    // playButton.removeEventListener("click", playButtonFunc);
                     files.reverse();
                     setVideo(files); // ここで二重にイベントリスナーを登録してしまうのでは？→対策として２行上で解除してから実行するようにした
                     // let beforeProsceSrc = prosce.src;
@@ -427,7 +416,13 @@ function addDomEvents(){
     // ドラッグ&ドロップ
     setDrugAndDrop();
 
-    // 設定
+    // 再生ボタン押下時の関数を定義
+    document.getElementById("play").addEventListener("click", playButtonFunc);
+    function playButtonFunc(Event) {
+        document.getElementById("playWhenCanplayEvent").click();
+    }
+
+    // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});
 }
 
