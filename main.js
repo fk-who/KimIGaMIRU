@@ -89,6 +89,18 @@ function setVideo(files,callback){
             return `${hour}:${min}:${rem}:${frame} ${sec}`
         }
         
+        // 再生ボタン押下時の関数を定義(動画入れ替え時に解除できるようにここで定義)
+        function playButtonFunc(Event) {
+            // if (STATUS == "pause"){
+            //     CONTROLBYUSER = true;
+            //     parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
+            // }else if (STATUS == "play"){
+            //     CONTROLBYUSER = true;
+            //     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
+            // }
+            playWhenCanplayEventCheck.click();
+        }
+
         // 親子判定(長さが短い方が親)及びそれに付随する操作
         // promiseとpromise.allを使って、二つとも読み込まれる(loadedmetadataイベント)のを待つ
         
@@ -141,16 +153,6 @@ function setVideo(files,callback){
             // 再生ボタン登録
             playButton.disabled = false;
             playButton.addEventListener("click", playButtonFunc);
-            function playButtonFunc(Event) {
-                // if (STATUS == "pause"){
-                //     CONTROLBYUSER = true;
-                //     parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
-                // }else if (STATUS == "play"){
-                //     CONTROLBYUSER = true;
-                //     parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
-                // }
-                playWhenCanplayEventCheck.click();
-            }
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
@@ -287,7 +289,7 @@ function setVideo(files,callback){
             }
         });
 
-        //ズレ修正処理
+        // ズレ修正処理
         function syncVideosCurrentTime(){
             let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
             parentVideo.currentTime = syncTime;
@@ -318,8 +320,14 @@ function setVideo(files,callback){
         if (files.length != 0){
             changeButton.addEventListener("click",()=>{
                 if (prosce.paused && main.paused){
+                    playButton.removeEventListener("click", playButtonFunc);
                     files.reverse();
-                    setVideo(files); // ここで二重にイベントリスナーを登録してしまうのでは？
+                    setVideo(files); // ここで二重にイベントリスナーを登録してしまうのでは？→対策として２行上で解除してから実行するようにした
+                    // let beforeProsceSrc = prosce.src;
+                    // let beforeMainSrc = main.src;
+                    // prosce.src = beforeMainSrc;
+                    // main.src = beforeProsceSrc;
+
                     changeButton.disabled = true;
                 }
             }, {once: true});
