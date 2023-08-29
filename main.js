@@ -1,9 +1,7 @@
-console.log("main.js v0.055");
+console.log("main.js v0.06");
 
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
-let STATUS = "pause"; // いるこれ?
-let CONTROLBYUSER = true;
 
 function fileSelect(e){
     let files = Array.from(e.target.files);
@@ -15,6 +13,10 @@ function setVideo(files,callback){
     const main =  document.getElementById("mainVideo");
     const videos = document.querySelectorAll("video");
     const playButton = document.getElementById("play");
+    const syncButton = document.getElementById("sync");
+    const changeButton = document.getElementById("changeMainProsce");
+    const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
+    const autoSyncCheck = document.getElementById("autoSync");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -76,16 +78,17 @@ function setVideo(files,callback){
                 frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
                 // let milliSec = (sec % 60 - rem) * 1000
             }else if(parseFloat(sec)<0){
-                sec = sec * (-1);
-                hour = "-" + ( '00' + Math.floor(sec / 3600) ).slice( -2 ) ;  // 3600秒=1時間
-                min = ( '00' + Math.floor(sec % 3600 / 60) ).slice( -2 );
-                rem = ( '00' + Math.floor(sec % 60) ).slice( -2 );
-                frame = ( '00' + Math.floor((sec % 60 - rem) * 60) ).slice( -2 );
+                secForCalc = sec * (-1);
+                hour = "-" + ( '00' + Math.floor(secForCalc / 3600) ).slice( -2 ) ;  // 3600秒=1時間
+                min = ( '00' + Math.floor(secForCalc % 3600 / 60) ).slice( -2 );
+                rem = ( '00' + Math.floor(secForCalc % 60) ).slice( -2 );
+                frame = ( '00' + Math.floor((secForCalc % 60 - rem) * 60) ).slice( -2 );
             }
             
             return `${hour}:${min}:${rem}:${frame} ${sec}`
         }
         
+
         // 親子判定(長さが短い方が親)及びそれに付随する操作
         // promiseとpromise.allを使って、二つとも読み込まれる(loadedmetadataイベント)のを待つ
         
@@ -133,88 +136,77 @@ function setVideo(files,callback){
             // 子動画を連打するとcontrol表示
             childVideo.addEventListener("click",()=>{
                 (CNT[1] > 9)? childVideo.controls = true : CNT[1]++;
-            }, false)
+            }, false);
         }).then(()=>{  // 親子判定後にする操作
-            // 再生ボタン登録
+            // 再生ボタン有効化
             playButton.disabled = false;
-            playButton.addEventListener("click", playButtonFunc);
-            function playButtonFunc(Event) {
-                if (STATUS == "pause"){
-                    CONTROLBYUSER = true;
-                    parentVideo.play(); // 親動画のコントロール監視により親を再生したら子再生など他の処理も行われる
-                }else if (STATUS == "play"){
-                    CONTROLBYUSER = true;
-                    parentVideo.pause(); // 親動画のコントロール監視により親を停止したら子停止&同期など他の処理も行われる
-                }
-            }
-            function syncVideosCurrentTime(){
-                let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
-                parentVideo.currentTime = syncTime;
-                childVideo.currentTime = syncTime;
-            }
             function changePlayPauseButtonStatus(status){
                 if (status == "play"){
                     playButton.innerText = "▶️ 同時再生";
                 }else if (status == "pause"){
-                    playButton.innerText = "⏸ 一時停止&ズレ修正";
+                    playButton.innerText = "⏸ 一時停止";
                 }
             }
+            
+            // 再生チェックボックスの設定
+            playWhenCanplayEventCheck.addEventListener("change", ()=>{
+                if (playWhenCanplayEventCheck.checked){
+                    // 再生する チェックされたとき
+                    parentVideo.play();
+                    changePlayPauseButtonStatus("pause");
+                    changeButton.disabled = true;
+                }else{
+                    // 再生する チェック外された時
+                    parentVideo.pause();
+                    changePlayPauseButtonStatus("play");
+                    syncVideosCurrentTime();
+                    changeButton.disabled = false;
+                }
+            });
+
+            // ズレ修正ボタン登録
+            syncButton.addEventListener("click", syncVideosCurrentTime);
+            syncButton.disabled = false;
 
             // 親動画のコントロール操作監視
-            parentVideo.addEventListener("pause", ()=>{ 
-                if (CONTROLBYUSER){
-                    STATUS = "pause";
-                    changePlayPauseButtonStatus("play");
-                }
+            parentVideo.addEventListener("pause", ()=>{
                 childVideo.pause();
-                syncVideosCurrentTime();
-                CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("play", ()=>{ 
                 childVideo.play();
-                if (CONTROLBYUSER){
-                    STATUS = "play";
-                    changePlayPauseButtonStatus("pause");
+                if (!playWhenCanplayEventCheck.checked){
+                    // playWhenCanplayEventCheck.checked = true;
+                    playWhenCanplayEventCheck.click(); // clickじゃないとイベントが発火しない
                 }
-                CONTROLBYUSER = true;
             });
             parentVideo.addEventListener("ratechange", ()=> childVideo.playbackRate = parentVideo.playbackRate );
 
             // 読み込みによる再生停止&再開の連動
             parentVideo.addEventListener("waiting", ()=>{
-                CONTROLBYUSER = false;
                 childVideo.pause();
-                // changePlayPauseButtonStatus("play"); 
                 parentInfoStatus.innerText = "waiting";
             });
             parentVideo.addEventListener("playing", ()=>{
-                CONTROLBYUSER = false;
                 childVideo.play(); 
                 parentInfoStatus.innerText = "";
             });
             parentVideo.addEventListener("canplay", ()=>{
-                // CONTROLBYUSER = false;
-                // childVideo.play();
-                if(STATUS == "play"){
-                    //childVideo.play();
+                if(playWhenCanplayEventCheck.checked){
+                    parentVideo.play();
                 }
                 parentInfoStatus.innerText = "";
             });
             childVideo.addEventListener("waiting", ()=>{
-                CONTROLBYUSER = false;
                 parentVideo.pause();
                 childInfoStatus.innerText = "waiting";
             });
             childVideo.addEventListener("playing", ()=>{
-                CONTROLBYUSER = false;
                 parentVideo.play();
                 childInfoStatus.innerText = "";
             });
             childVideo.addEventListener("canplay", ()=>{
-                // CONTROLBYUSER = false;
-                // parentVideo.play();
-                if(STATUS == "play"){
-                    //parentVideo.play();
+                if(playWhenCanplayEventCheck.checked){
+                    parentVideo.play();
                 }
                 childInfoStatus.innerText = "";
             });
@@ -222,9 +214,9 @@ function setVideo(files,callback){
             //video要素のEventをデバッグ
             function dbgEventFunc(e){
                 let now = new Date();
-                console.log(`${e.type} ${e.target.id} ${STATUS} ${CONTROLBYUSER} ${now.getSeconds()}`);
+                console.log(`${e.type} ${e.target.id} ${now.getSeconds()}`);
             }
-            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting"];
+            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting", "seeking", "seeked"];
             document.querySelectorAll("video").forEach( v =>{
                 dbgEventList.forEach( dbgEvent =>{
                     v.addEventListener(dbgEvent, dbgEventFunc);
@@ -264,6 +256,13 @@ function setVideo(files,callback){
             }
         });
 
+        // ズレ修正処理
+        function syncVideosCurrentTime(){
+            let syncTime = Math.floor(parentVideo.currentTime * 10) / 10; // 小数点第2位以下を切り捨て
+            parentVideo.currentTime = syncTime;
+            childVideo.currentTime = syncTime;
+        }
+
         // 再生時間表示
         prosce.addEventListener("timeupdate", ()=>{
             document.querySelector("span.info-prosce-timecode").innerText = secToTimecode(prosce.currentTime);
@@ -275,16 +274,23 @@ function setVideo(files,callback){
         }, false);
         //   動画時間の差を更新
         function updateTimeDifference(){
-            document.querySelector("span.info-time-difference").innerText = secToTimecode(prosce.currentTime - main.currentTime);
+            let timeDifference = prosce.currentTime - main.currentTime;
+            document.querySelector("span.info-time-difference").innerText = secToTimecode(timeDifference);
+            // ズレが大きいとき自動で修正
+            if (((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)) && autoSyncCheck.checked){
+                console.log("ズレ修正 " + timeDifference);
+                syncVideosCurrentTime();
+            }
         }
 
         // 動画入れ替えbutton登録(一つも動画が読み込まれていない場合を除く)
         if (files.length != 0){
-            const changeButton = document.getElementById("changeMainProsce");
             changeButton.addEventListener("click",()=>{
-                // playButton.removeEventListener("click", playButtonFunc);
-                files.reverse();
-                setVideo(files);
+                if (prosce.paused && main.paused){
+                    files.reverse();
+                    setVideo(files);
+                    changeButton.disabled = true;
+                }
             }, {once: true});
             changeButton.disabled = false;
         }
@@ -380,7 +386,13 @@ function addDomEvents(){
     // ドラッグ&ドロップ
     setDrugAndDrop();
 
-    // 設定
+    // 再生ボタン押下時の関数を定義
+    document.getElementById("play").addEventListener("click", playButtonFunc);
+    function playButtonFunc(Event) {
+        document.getElementById("playWhenCanplayEvent").click();
+    }
+
+    // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});
 }
 

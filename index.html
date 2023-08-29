@@ -28,8 +28,9 @@
             <div class="buttons">
                 <div class="buttons-play">
                     <button id="play" disabled>▶️ 同時再生</button>
-                
-
+                    <input type="checkbox" id="playWhenCanplayEvent" name="再生" class="nodisplay">
+                    <label for="playWhenCanplayEvent" class="nodisplay">再生する</label>                
+                    <button id="sync" disabled>ズレ修正</button>
                 </div>
                 <div class="buttons-settings">
                     <label for="selectMute"> 音声：</label>
@@ -49,12 +50,19 @@
                         multiple
                     >
                     <button id="changeMainProsce" class="" disabled>prosce(上)↔main(下)</button>
+                    <label for="format" class="nodisplay"> 仕様：</label>
+                    <select id="format" class="nodisplay">
+                        <option value="KTM2023">KimIToMIKU 2023~</option>
+                        <!-- <option value="MKnt2023">MIKUnity 2023</option> -->
+                    </select>
+                    <input type="checkbox" id="autoSync" name="自動でズレを修正" checked>
+                    <label for="autoSync">再生中に自動でズレを修正する(うまく再生できない場合はチェックを外して下さい)</label>
                 </div>
             </div>
             <div class="info">
                 <p>prosce(上): <span class="info-prosce-filename"></span> (<span class="info-prosce-timecode">--:--:--:--</span>/<span class="info-prosce-duration">--:--:--:--</span>) <span class="info-prosce-status"></span></p>
                 <p>main(下): <span class="info-main-filename"></span> (<span class="info-main-timecode">--:--:--:--</span>/<span class="info-main-duration">--:--:--:--</span>) <span class="info-main-status"></span></p>
-                <p>時間差(上 - 下): <span class="info-time-difference">--:--:--:--</span></p>
+                <p>時間差(prosce - main): <span class="info-time-difference">--:--:--:--</span></p>
             </div>
         </div>
         <div class="scroll-animation">
@@ -68,7 +76,7 @@
             </svg>
         </div>
     </div>
-    <footer>KimIGaMIRU - Ki<dummy>mIT</dummy>oM<dummy2>I</dummy2>KU投影映像確認ツール v0.055</footer>
+    <footer>KimIGaMIRU - Ki<dummy>mIT</dummy>oM<dummy2>I</dummy2>KU投影映像確認ツール v0.06</footer>
     <script type="text/javascript" src="main.js"></script>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab9bfef80bd143c8935ac31cf262e341"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
