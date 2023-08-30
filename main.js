@@ -55,16 +55,38 @@ function setVideo(files,callback){
                 console.log(file);
                 videoFileUrl.push(window.URL.createObjectURL(file));
             }
-            // document.querySelector(".prosce-screen img").style.display = "none";
-            prosce.src = videoFileUrl[0];
-            prosce.style.display = "block";
-            // document.querySelector(".main-screen img").style.display = "none";
-            main.src = videoFileUrl[1];
-            main.style.display = "block";
+            
+            // ファイル名からプロセかメインか判別を試みる
+            const prosce_keyword = ["prosce", "proscenium", "プロセ", "ﾌﾟﾛｾ", "プロセニウム", "ﾌﾟﾛｾﾆｳﾑ", "プロセニアム", "ﾌﾟﾛｾﾆｱﾑ"];
+            const main_keyword = ["main", "メイン", "ﾒｲﾝ"];
+            let isFile0Prosce = isFile0Main = isFile1Prosce = isFile1Main = false;
+            prosce_keyword.forEach( w =>{ isFile0Prosce = isFile0Prosce? true : files[0].name.includes(w); });
+            prosce_keyword.forEach( w =>{ isFile1Prosce = isFile1Prosce? true : files[1].name.includes(w); });
+            main_keyword.forEach( w =>{ isFile0Main = isFile0Main? true : files[0].name.includes(w); });
+            main_keyword.forEach( w =>{ isFile1Main = isFile1Main? true : files[1].name.includes(w); });
+            console.log(`isFile0Prosce:${isFile0Prosce} isFile0Main:${isFile0Main} isFile1Prosce:${isFile1Prosce} isFile1Main:${isFile1Main}`);
+            if ((isFile0Prosce || isFile1Main) || !(isFile0Main || isFile0Prosce || isFile1Main || isFile1Prosce)){
+                // 0がプロセ OR 1がメイン もしくは 判定不可能の場合
+                prosce.src = videoFileUrl[0];
+                main.src = videoFileUrl[1];
+                document.querySelector("span.info-prosce-filename").innerText = files[0].name;
+                document.querySelector("span.info-main-filename").innerText = files[1].name;
+            }else if (isFile1Prosce || isFile0Main){
+                // 1がプロセ OR 0がメイン
+                prosce.src = videoFileUrl[1];
+                main.src = videoFileUrl[0];
+                document.querySelector("span.info-prosce-filename").innerText = files[1].name;
+                document.querySelector("span.info-main-filename").innerText = files[0].name;
+            }else{
+                prosce.src = videoFileUrl[0];
+                main.src = videoFileUrl[1];
+                document.querySelector("span.info-prosce-filename").innerText = files[0].name;
+                document.querySelector("span.info-main-filename").innerText = files[1].name;
+            }
 
-            // 動画ファイル名表示
-            document.querySelector("span.info-prosce-filename").innerText = files[0].name;
-            document.querySelector("span.info-main-filename").innerText = files[1].name;
+            prosce.style.display = "block";
+            main.style.display = "block";
+            
         }
 
         // 動画時間表示のためsecからタイムコードへ変換する関数を定義
@@ -216,7 +238,7 @@ function setVideo(files,callback){
                 let now = new Date();
                 console.log(`${e.type} ${e.target.id} ${now.getSeconds()}`);
             }
-            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting", "seeking", "seeked"];
+            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting" /* , "seeking", "seeked" */];
             document.querySelectorAll("video").forEach( v =>{
                 dbgEventList.forEach( dbgEvent =>{
                     v.addEventListener(dbgEvent, dbgEventFunc);
@@ -228,7 +250,7 @@ function setVideo(files,callback){
             parentVideo.addEventListener("seeked", ()=>{childVideo.currentTime = parentVideo.currentTime; if(!parentVideo.paused){childVideo.play();} }, false); // 本当は子のシークが終わるまで親を待たせた方がずれにくい？
 
             // 音声切り替えプルダウン登録
-            videos.forEach( (e) => e.volume = 0.5);
+            videos.forEach( (e) => e.volume = 0.375); // 2つ合わせて0.75くらいになるように
             const selectMute = document.getElementById("selectMute");
             selectMute.disabled = false;
             selectMute.addEventListener("change", selectMuteFunc);
