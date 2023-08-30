@@ -170,7 +170,7 @@ function setVideo(files,callback){
                 }
             }
             
-            // 再生チェックボックスの設定
+            // 再生チェックボックスの設定 チェック外されたときの処理を変更する場合,再生終了時の処理も要確認
             playWhenCanplayEventCheck.addEventListener("change", ()=>{
                 if (playWhenCanplayEventCheck.checked){
                     // 再生する チェックされたとき
@@ -233,12 +233,33 @@ function setVideo(files,callback){
                 childInfoStatus.innerText = "";
             });
 
+            // 再生終了時にボタンの表示を変更
+            parentVideo.addEventListener("ended", ()=>{
+                if (playWhenCanplayEventCheck.checked){
+                    // playWhenCanplayEventCheck.click(); だとズレ修正される→最終フレームで止まらない
+                    // ズレ修正処理を走らせないために、再生チェックボックスのchangeイベントを発火させず、ここでボタン表示変更処理を行う
+                    playWhenCanplayEventCheck.checked = false;
+                    changePlayPauseButtonStatus("play");
+                    // syncVideosCurrentTime(); 最終フレームで止まらせるためにズレ修正処理はしない
+                    changeButton.disabled = false;
+                }
+            });
+            childVideo.addEventListener("ended", ()=>{ // parentのほうが動画時間短い=先に終わる のでここが呼ばれることはあまりないかも?
+                if (playWhenCanplayEventCheck.checked){
+                    parentVideo.pause(); // childがpauseしたときの親の処理はないのでここで止める
+                    playWhenCanplayEventCheck.checked = false;
+                    changePlayPauseButtonStatus("play");
+                    // syncVideosCurrentTime(); 最終フレームで止まらせるためにズレ修正処理はしない
+                    changeButton.disabled = false;
+                }
+            });
+            
             //video要素のEventをデバッグ
             function dbgEventFunc(e){
                 let now = new Date();
                 console.log(`${e.type} ${e.target.id} ${now.getSeconds()}`);
             }
-            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting" /* , "seeking", "seeked" */];
+            let dbgEventList = ["click", "stalled", "suspend", "play", "pause", "playing", "canplay", "canplaythrough", "error", "waiting", "ended" /* , "seeking", "seeked" */];
             document.querySelectorAll("video").forEach( v =>{
                 dbgEventList.forEach( dbgEvent =>{
                     v.addEventListener(dbgEvent, dbgEventFunc);
