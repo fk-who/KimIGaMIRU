@@ -1,29 +1,45 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
 div.prosce-screen{
     display: flex;
     max-width: 100%;
+    /* width: 100%; */
     /* height: 22.96875%; */
-    max-height: 32dvh;
-    aspect-ratio: 1/0.2296875;
+    /* max-height: 32dvh; */
+    aspect-ratio: 1782/233;
     align-self: center;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    /* object-fit: cover; */
+    overflow: clip;
 }
 
 .prosce-screen video{
-    aspect-ratio: 1/0.2296875;
+    aspect-ratio: 1782/233;
     object-fit: cover;
-    object-position: 0 58.653704%;
-    height: 100%;
-    width: 100%;
-    height: auto;
+    object-position: 50% top;
+    /* height: 94%; */
+    width: calc(100% * calc(1920/1782));
+    max-width: none;
+    max-height: none;
+    /* height: auto; */
 }
 
 div.main-screen {
-    max-height: 68dvh;
+    /* max-height: 68dvh; */
+    /* height: 69dvh; */
+    max-width: 90dvw;
+    aspect-ratio: 1920/960;
+    overflow: clip;
+    align-self: center;
 }
 
 .main-screen video{
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    object-position: 50% 72.851852%;
 }

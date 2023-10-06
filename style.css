@@ -7,6 +7,8 @@
 ::-webkit-scrollbar {
     width: 16px;              /* スクロールバー全体の幅 */
     background-color: black;   /* スクロールバーの背景色 */
+    color: black;
+    /* display: flow-root; */
 }
   
 :hover ::-webkit-scrollbar-thumb {
@@ -21,9 +23,6 @@
     border: solid 4px transparent;            /* スクロールバーの左右の余白 */
 }
 
-::-webkit-scrollbar{
-    color: black;
-}
 
 /* スクロールアニメーション */
 /* 参考 https://photopizza.design/css_prompt_scrolling/ */
@@ -104,7 +103,8 @@ body{
     background-color: black;
     color: white;
     display: flex;
-    margin-top: 0;
+    /* margin-top: 0; */
+    margin: 0 0 8px 0;
     flex-direction: column;
     font-family: sans-serif;
 }
@@ -129,38 +129,6 @@ div.screens{
     flex-direction: column;
     margin-bottom: 1em;
 }
-
-/* ここから仕様ごとに違う箇所 */
-div.prosce-screen{
-    display: flex;
-    max-width: 100%;
-    /* height: 22.96875%; */
-    max-height: 32dvh;
-    aspect-ratio: 1/0.2296875;
-    align-self: center;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.prosce-screen video{
-    aspect-ratio: 1/0.2296875;
-    object-fit: cover;
-    object-position: 0 58.653704%;
-    height: 100%;
-    width: 100%;
-    height: auto;
-}
-
-div.main-screen {
-    max-height: 68dvh;
-}
-
-.main-screen video{
-    width: 100%;
-    height: 100%;
-}
-/* ここまで仕様ごとに違う箇所 */
 
 div.controls{
     align-self: center;
