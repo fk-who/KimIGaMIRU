@@ -9,23 +9,23 @@ const FORMATS = {
         kimitomiku2023: {
             is_enable: true,
             display_name: "KimIToMIKU 2023~",
-            default_prosce: "formats\kimitomiku2023\prosceniumScreen-safetyZone_2023_KTMcolor.mp4",
-            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
-            css: "formats\kimitomiku2023\format_kimitomiku2023.css"
+            default_prosce: "formats/kimitomiku2023/prosceniumScreen-safetyZone_2023_KTMcolor.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/kimitomiku2023/format_kimitomiku2023.css"
         },
         mikunity2023: {
             is_enable: true,
             display_name: "MIKUnity 2023",
-            default_prosce: "formats\mikunity2023\MIKUnity2023_clearance_prosce.mp4",
-            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
-            css: "formats\mikunity2023\format_mikunity2023.css"
+            default_prosce: "formats/mikunity2023/MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/mikunity2023/format_mikunity2023.css"
         },
         test: {
             is_enable: false,
             display_name: "test optionテスト",
-            default_prosce: "formats\mikunity2023\MIKUnity2023_clearance_prosce.mp4",
-            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
-            css: "formats\mikunity2023\format_mikunity2023.css"
+            default_prosce: "formats/mikunity2023/MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/mikunity2023/format_mikunity2023.css"
         },
         cannotchoose: {
             is_enable:false
@@ -387,7 +387,7 @@ function dbg(){
     let mainCode = (main)? `d.getElementById("mainVideo").src="${main}";` : "";
     setVideo([],()=>{});
     window.prompt(
-        "1. 以下をコピーしてブラウザのアドレスバーに貼り付け\n2. 先頭の # を消して開く",
+        "1. 以下をコピーしてブラウザのアドレスバーに貼り付け/n2. 先頭の # を消して開く",
         `# javascript:((d)=>{${prosceCode}${mainCode}})(document);`
     );
 }
@@ -398,6 +398,7 @@ function fileSelectFunc(){
 
 function whenChangeFormat(){
     console.log(FORMAT_SELECTBOX.value);
+    document.getElementById("format-css").href = FORMATS.list[FORMAT_SELECTBOX.value]["css"];
 }
 
 function setDrugAndDrop(e){
