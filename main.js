@@ -1,7 +1,39 @@
-console.log("main.js v0.06");
+console.log("main.js v0.07");
 
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
+
+const FORMATS = {
+    default: "mikunity2023",
+    list: {
+        kimitomiku2023: {
+            is_enable: true,
+            display_name: "KimIToMIKU 2023~",
+            default_prosce: "formats/kimitomiku2023/prosceniumScreen-safetyZone_2023_KTMcolor.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/kimitomiku2023/format_kimitomiku2023.css"
+        },
+        mikunity2023: {
+            is_enable: true,
+            display_name: "MIKUnity 2023",
+            default_prosce: "formats/mikunity2023/MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/mikunity2023/format_mikunity2023.css"
+        },
+        test: {
+            is_enable: false,
+            display_name: "test optionテスト",
+            default_prosce: "formats/mikunity2023/MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats/mikunity2023/format_mikunity2023.css"
+        },
+        cannotchoose: {
+            is_enable:false
+        }
+    }
+}
+
+const FORMAT_SELECTBOX = document.getElementById("format");
 
 function fileSelect(e){
     let files = Array.from(e.target.files);
@@ -320,7 +352,9 @@ function setVideo(files,callback){
             let timeDifference = prosce.currentTime - main.currentTime;
             document.querySelector("span.info-time-difference").innerText = secToTimecode(timeDifference);
             // ズレが大きいとき自動で修正
-            if (((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)) && autoSyncCheck.checked){
+            const lagFrame = 1;
+            const fps = 60;
+            if (((timeDifference > 0 && timeDifference >= (1/fps) * lagFrame) || (timeDifference < 0 && timeDifference*(-1) >= (1/fps) * lagFrame)) && autoSyncCheck.checked){
                 console.log("ズレ修正 " + timeDifference);
                 syncVideosCurrentTime();
             }
@@ -355,13 +389,22 @@ function dbg(){
     let mainCode = (main)? `d.getElementById("mainVideo").src="${main}";` : "";
     setVideo([],()=>{});
     window.prompt(
-        "1. 以下をコピーしてブラウザのアドレスバーに貼り付け\n2. 先頭の # を消して開く",
+        "1. 以下をコピーしてブラウザのアドレスバーに貼り付け/n2. 先頭の # を消して開く",
         `# javascript:((d)=>{${prosceCode}${mainCode}})(document);`
     );
 }
 
 function fileSelectFunc(){
     this.nextElementSibling.click();
+}
+
+function whenChangeFormat(){
+    console.log(FORMAT_SELECTBOX.value);
+    document.getElementById("format-css").href = FORMATS.list[FORMAT_SELECTBOX.value]["css"];
+    if (document.querySelector("button.file-select").innerText != "リセット"){
+        document.getElementById("prosceVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_prosce"];
+        document.getElementById("mainVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_main"];
+    }
 }
 
 function setDrugAndDrop(e){
@@ -434,6 +477,21 @@ function addDomEvents(){
     function playButtonFunc(Event) {
         document.getElementById("playWhenCanplayEvent").click();
     }
+
+    // 仕様選択セレクトボックス設定
+    for (const format_key in FORMATS["list"]){
+        if (FORMATS["list"][format_key]["is_enable"]){
+            const opt = document.createElement("option");
+            opt.value = format_key;
+            opt.text = FORMATS["list"][format_key]["display_name"];
+            if (FORMATS.default == format_key){
+                opt.selected = true;
+            }
+            FORMAT_SELECTBOX.add(opt);
+        }
+    }
+    whenChangeFormat(); // デフォルトの仕様設定
+    FORMAT_SELECTBOX.addEventListener("change", whenChangeFormat);
 
     // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});

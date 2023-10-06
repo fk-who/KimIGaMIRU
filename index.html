@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,noarchive,nofollow,noimageindex">
     <link type="text/css" href="style.css" rel="stylesheet">
+    <link type="text/css" id="format-css" href="" rel="stylesheet">
     <title>KGM - KTM映像確認ツール</title>
 </head>
 <body>
@@ -50,10 +51,9 @@
                         multiple
                     >
                     <button id="changeMainProsce" class="" disabled>prosce(上)↔main(下)</button>
-                    <label for="format" class="nodisplay"> 仕様：</label>
-                    <select id="format" class="nodisplay">
-                        <option value="KTM2023">KimIToMIKU 2023~</option>
-                        <!-- <option value="MKnt2023">MIKUnity 2023</option> -->
+                    <label for="format" class=""> 仕様：</label>
+                    <select id="format" class="">
+                        <!-- javascriptで自動追加 -->
                     </select>
                     <input type="checkbox" id="autoSync" name="自動でズレを修正" checked>
                     <label for="autoSync">再生中に自動でズレを修正する(うまく再生できない場合はチェックを外して下さい)</label>
@@ -76,7 +76,7 @@
             </svg>
         </div>
     </div>
-    <footer>KimIGaMIRU - Ki<dummy>mIT</dummy>oM<dummy2>I</dummy2>KU投影映像確認ツール v0.06</footer>
+    <footer>KimIGaMIRU - Ki<dummy>mIT</dummy>oM<dummy2>I</dummy2>KU & MIKUnity 投影映像確認ツール v0.07</footer>
     <script type="text/javascript" src="main.js"></script>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab9bfef80bd143c8935ac31cf262e341"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
