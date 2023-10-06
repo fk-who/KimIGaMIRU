@@ -1,0 +1,29 @@
+div.prosce-screen{
+    display: flex;
+    max-width: 100%;
+    /* height: 22.96875%; */
+    max-height: 32dvh;
+    aspect-ratio: 1/0.2296875;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.prosce-screen video{
+    aspect-ratio: 1/0.2296875;
+    object-fit: cover;
+    object-position: 0 58.653704%;
+    height: 100%;
+    width: 100%;
+    height: auto;
+}
+
+div.main-screen {
+    max-height: 68dvh;
+}
+
+.main-screen video{
+    width: 100%;
+    height: 100%;
+}
