@@ -399,6 +399,8 @@ function fileSelectFunc(){
 function whenChangeFormat(){
     console.log(FORMAT_SELECTBOX.value);
     document.getElementById("format-css").href = FORMATS.list[FORMAT_SELECTBOX.value]["css"];
+    document.getElementById("prosceVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_prosce"];
+    document.getElementById("mainVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_main"];
 }
 
 function setDrugAndDrop(e){
