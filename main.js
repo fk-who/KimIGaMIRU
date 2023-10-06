@@ -3,6 +3,38 @@ console.log("main.js v0.06");
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
 
+const FORMATS = {
+    default: "mikunity2023",
+    list: {
+        kimitomiku2023: {
+            is_enable: true,
+            display_name: "KimIToMIKU 2023~",
+            default_prosce: "formats\kimitomiku2023\prosceniumScreen-safetyZone_2023_KTMcolor.mp4",
+            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats\kimitomiku2023\format_kimitomiku2023.css"
+        },
+        mikunity2023: {
+            is_enable: true,
+            display_name: "MIKUnity 2023",
+            default_prosce: "formats\mikunity2023\MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats\mikunity2023\format_mikunity2023.css"
+        },
+        test: {
+            is_enable: false,
+            display_name: "test optionテスト",
+            default_prosce: "formats\mikunity2023\MIKUnity2023_clearance_prosce.mp4",
+            default_main: "formats\kimitomiku2023\mainScreen-safetyZone_2023_KTMcolor.mp4",
+            css: "formats\mikunity2023\format_mikunity2023.css"
+        },
+        cannotchoose: {
+            is_enable:false
+        }
+    }
+}
+
+const FORMAT_SELECTBOX = document.getElementById("format");
+
 function fileSelect(e){
     let files = Array.from(e.target.files);
     setVideo(files);
@@ -364,6 +396,10 @@ function fileSelectFunc(){
     this.nextElementSibling.click();
 }
 
+function whenChangeFormat(){
+    console.log(FORMAT_SELECTBOX.value);
+}
+
 function setDrugAndDrop(e){
     // 参考 https://note.affi-sapo-sv.com/js-dandfile.php
     
@@ -434,6 +470,21 @@ function addDomEvents(){
     function playButtonFunc(Event) {
         document.getElementById("playWhenCanplayEvent").click();
     }
+
+    // 仕様選択セレクトボックス設定
+    for (const format_key in FORMATS["list"]){
+        if (FORMATS["list"][format_key]["is_enable"]){
+            const opt = document.createElement("option");
+            opt.value = format_key;
+            opt.text = FORMATS["list"][format_key]["display_name"];
+            if (FORMATS.default == format_key){
+                opt.selected = true;
+            }
+            FORMAT_SELECTBOX.add(opt);
+        }
+    }
+    whenChangeFormat(); // デフォルトの仕様設定
+    FORMAT_SELECTBOX.addEventListener("change", whenChangeFormat);
 
     // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});
