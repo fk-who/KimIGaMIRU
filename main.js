@@ -352,7 +352,9 @@ function setVideo(files,callback){
             let timeDifference = prosce.currentTime - main.currentTime;
             document.querySelector("span.info-time-difference").innerText = secToTimecode(timeDifference);
             // ズレが大きいとき自動で修正
-            if (((timeDifference > 0 && timeDifference >= (1/60)*2) || (timeDifference < 0 && timeDifference*(-1) >= (1/60)*2)) && autoSyncCheck.checked){
+            const lagFrame = 1;
+            const fps = 60;
+            if (((timeDifference > 0 && timeDifference >= (1/fps) * lagFrame) || (timeDifference < 0 && timeDifference*(-1) >= (1/fps) * lagFrame)) && autoSyncCheck.checked){
                 console.log("ズレ修正 " + timeDifference);
                 syncVideosCurrentTime();
             }
@@ -399,8 +401,10 @@ function fileSelectFunc(){
 function whenChangeFormat(){
     console.log(FORMAT_SELECTBOX.value);
     document.getElementById("format-css").href = FORMATS.list[FORMAT_SELECTBOX.value]["css"];
-    document.getElementById("prosceVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_prosce"];
-    document.getElementById("mainVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_main"];
+    if (document.querySelector("button.file-select").innerText != "リセット"){
+        document.getElementById("prosceVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_prosce"];
+        document.getElementById("mainVideo").src = FORMATS.list[FORMAT_SELECTBOX.value]["default_main"];
+    }
 }
 
 function setDrugAndDrop(e){
