@@ -4,7 +4,7 @@ let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
 
 const FORMATS = {
-    default: "mikunity2023",
+    default: "mikunity2023_002",
     list: {
         kimitomiku2023: {
             is_enable: true,
@@ -15,10 +15,17 @@ const FORMATS = {
         },
         mikunity2023: {
             is_enable: true,
-            display_name: "MIKUnity 2023",
+            display_name: "MIKUnity 2023 暫定版",
             default_prosce: "formats/mikunity2023/MIKUnity2023_clearance_prosce.mp4",
             default_main: "formats/kimitomiku2023/mainScreen-safetyZone_2023_KTMcolor.mp4",
             css: "formats/mikunity2023/format_mikunity2023.css"
+        },
+        mikunity2023_002: {
+            is_enable: true,
+            display_name: "MIKUnity 2023/10/18修正版",
+            default_prosce: "formats/mikunity2023_002/MIKUnity2023_clearance_prosce_003-arrow.mp4", /* 1900x208, 上余白の高さ29px */
+            default_main: "formats/mikunity2023_002/MIKUnity2023_clearance_main_002.mp4",
+            css: "formats/mikunity2023_002/format_mikunity2023_002.css"
         },
         test: {
             is_enable: false,
