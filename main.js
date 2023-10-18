@@ -22,7 +22,7 @@ const FORMATS = {
         },
         mikunity2023_002: {
             is_enable: true,
-            display_name: "MIKUnity 2023 10/18修正版",
+            display_name: "MIKUnity 2023/10/18修正版",
             default_prosce: "formats/mikunity2023_002/MIKUnity2023_clearance_prosce_003-arrow.mp4", /* 1900x208, 上余白の高さ29px */
             default_main: "formats/mikunity2023_002/MIKUnity2023_clearance_main_002.mp4",
             css: "formats/mikunity2023_002/format_mikunity2023_002.css"
