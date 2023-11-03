@@ -310,7 +310,7 @@ function setVideo(files,callback){
             parentVideo.addEventListener("seeked", ()=>{childVideo.currentTime = parentVideo.currentTime; if(!parentVideo.paused){childVideo.play();} }, false); // 本当は子のシークが終わるまで親を待たせた方がずれにくい？
 
             // 音声切り替えプルダウン登録
-            videos.forEach( (e) => e.volume = 0.375); // 2つ合わせて0.75くらいになるように
+            videos.forEach( (e) => e.volume = 0.25); // 2つ合わせて0.5くらいになるように
             const selectMute = document.getElementById("selectMute");
             selectMute.disabled = false;
             selectMute.addEventListener("change", selectMuteFunc);
