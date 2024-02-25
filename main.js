@@ -4,7 +4,7 @@ let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
 
 const FORMATS = {
-    default: "mikunity2023_002",
+    default: "kimitomiku2023",
     list: {
         kimitomiku2023: {
             is_enable: true,
