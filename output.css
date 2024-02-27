@@ -18,6 +18,11 @@
     border: solid 4px transparent;            /* スクロールバーの左右の余白 */
 }
 
+::-webkit-scrollbar-button,::-webkit-scrollbar-corner,::-webkit-resizer {
+    background-color: var(--backgroud-color);
+    display: none;
+}
+
 body{
     width: 100%;  /* dvwにするとスクロールバーが表示されてしまうときがある */
     height: 100dvh;
