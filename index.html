@@ -13,14 +13,14 @@
         <div class="screens">
             <div class="prosce-screen">
                 <!-- <img src="prosceniumScreen-safetyZone_2023.png"> -->
-                <video id="prosceVideo" playsinline muted autoplay>
+                <video id="prosceVideo" preload="auto" playsinline muted autoplay>
                     <source src="prosceniumScreen-safetyZone_2023_KTMcolor.mp4">
                     <!-- 上から372px, 下から267px 切り取り-->
                 </video>
             </div>
             <div class="main-screen">
                 <!-- <img src="mainScreen-safetyZone_2023.png"> -->
-                <video id="mainVideo" playsinline muted autoplay>
+                <video id="mainVideo" preload="auto" playsinline muted autoplay>
                     <source src="mainScreen-safetyZone_2023_KTMcolor.mp4">
                 </video>
             </div>
@@ -57,6 +57,7 @@
                     </select>
                     <input type="checkbox" id="autoSync" name="自動でズレを修正" checked>
                     <label for="autoSync">再生中に自動でズレを修正する(うまく再生できない場合はチェックを外して下さい)</label>
+                    <button id="openWindow" class="" disabled>別ウィンドウで再生</button>
                 </div>
             </div>
             <div class="info">
