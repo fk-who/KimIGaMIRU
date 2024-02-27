@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* スクロールバー 参考 https://zenn.dev/datsukan/articles/a2836960a88fb4 */
 ::-webkit-scrollbar {
     width: 16px;              /* スクロールバー全体の幅 */
