@@ -1,4 +1,4 @@
-console.log("main.js v0.07");
+console.log("main.js v0.08");
 
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
