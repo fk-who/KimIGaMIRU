@@ -1,10 +1,14 @@
 @charset "UTF-8";
 
+:root{
+    --backgroud-color: black;
+}
+
 /* スクロールバー 参考 https://zenn.dev/datsukan/articles/a2836960a88fb4 */
 ::-webkit-scrollbar {
     width: 16px;              /* スクロールバー全体の幅 */
-    background-color: black;   /* スクロールバーの背景色 */
-    color: black;
+    background-color: var(--backgroud-color);   /* スクロールバーの背景色 */
+    color: var(--backgroud-color);
     /* display: flow-root; */
 }
 
@@ -22,6 +26,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--backgroud-color);
 }
 
 canvas {
