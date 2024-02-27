@@ -1,0 +1,73 @@
+@charset "UTF-8";
+
+:root{
+    --backgroud-color: black;
+}
+
+/* スクロールバー 参考 https://zenn.dev/datsukan/articles/a2836960a88fb4 */
+::-webkit-scrollbar {
+    width: 16px;              /* スクロールバー全体の幅 */
+    background-color: var(--backgroud-color);   /* スクロールバーの背景色 */
+    color: var(--backgroud-color);
+    /* display: flow-root; */
+}
+
+:hover ::-webkit-scrollbar-thumb {
+    border-radius: 10px;                      /* スクロールバーの丸み */
+    box-shadow: inset 0 0 10px 10px #464646 /*#909090*/ ;  /* スクロールバーの色 */
+    border: solid 4px transparent;            /* スクロールバーの左右の余白 */
+}
+
+::-webkit-scrollbar-button,::-webkit-scrollbar-corner,::-webkit-resizer {
+    background-color: var(--backgroud-color);
+    display: none;
+}
+
+body{
+    width: 100%;  /* dvwにするとスクロールバーが表示されてしまうときがある */
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--backgroud-color);
+}
+
+canvas {
+    background: #000;
+    border: none;
+    margin: 0;
+    padding: 0;
+    transform-origin: center center;
+}
+
+#overlay{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    transition: backgroud, 2.5s;
+    & *{
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity, 0.6s;
+        filter: drop-shadow(0 0 0.3rem white);
+        color: dimgray;
+        
+    }
+    @media (hover: hover) {
+        &:not(.nodisplay):hover{
+            & *{
+                visibility: visible;
+                opacity: 1;
+            }
+            background: rgb(180 180 180 / 60%);
+        }
+    }
+}

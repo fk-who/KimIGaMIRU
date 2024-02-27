@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root {
     --prosce-height: 441px;
     --prosce-object-position-y: 374px;
@@ -10,7 +12,7 @@
     color: black;
     /* display: flow-root; */
 }
-  
+
 :hover ::-webkit-scrollbar-thumb {
     border-radius: 10px;                      /* スクロールバーの丸み */
     box-shadow: inset 0 0 10px 10px #464646 /*#909090*/ ;  /* スクロールバーの色 */

@@ -1,4 +1,4 @@
-console.log("main.js v0.07");
+console.log("main.js v0.08");
 
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
@@ -56,6 +56,7 @@ function setVideo(files,callback){
     const changeButton = document.getElementById("changeMainProsce");
     const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
     const autoSyncCheck = document.getElementById("autoSync");
+    const openWindowButton = document.getElementById("openWindow");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -336,6 +337,41 @@ function setVideo(files,callback){
                     childVideo.volume = parentVideo.volume;
                 }
             }
+
+            // 別ウィンドウで再生する機能
+            let mainOutputWindowPrx;
+            let prosceOutputWindowPrx;
+            openWindowButton.addEventListener("click", ()=>{
+                function draw(ctx, image, dx, dy, dWidth, dHeight){
+                    ctx.drawImage(image, dx, dy, dWidth, dHeight);
+                    requestAnimationFrame(()=>{draw(ctx, image, dx, dy, dWidth, dHeight)});
+                }
+                window.addEventListener("message", (event) => {
+                    if (event.origin !== "http://127.0.0.1:5500") return;
+                    if (event.data == "DOMContentLoaded"){
+                        console.log("message", event)
+                        console.log(event.source.name)
+                        let sourceWindow = event.source
+                        sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
+                        canvas = sourceWindow.document.getElementById("output");
+                        ctx = canvas.getContext("2d");
+                        draw(ctx, document.getElementById(`${sourceWindow.name}Video`), 0, 0, canvas.width, canvas.height);
+                    }
+                }); 
+                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
+                    mainOutputWindowPrx = window.open("output.html", "main", "popup");
+                }
+                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed){
+                    prosceOutputWindowPrx = window.open("output.html", "prosce", "popup");
+                }
+                console.log({mainOutputWindowPrx, prosceOutputWindowPrx});
+                if(mainOutputWindowPrx && prosceOutputWindowPrx){
+                    openWindowButton.innerText = "別ウィンドウで再生";
+                }else{
+                    openWindowButton.innerText = "もう一度押してください";
+                }
+            });
+            openWindowButton.disabled = false;
         });
 
         // ズレ修正処理
@@ -454,7 +490,7 @@ function setDrugAndDrop(e){
 
             const files = e.dataTransfer.files;
 
-           /* tarea.value +=`${files.length}のファイルがドロップされた。`;
+            /* tarea.value +=`${files.length}のファイルがドロップされた。`;
             for( file of files ) tarea.value += `name:${file.name} type:${file.type}` ;
 
             ddarea.classList.remove("ddefect"); */
