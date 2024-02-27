@@ -358,10 +358,10 @@ function setVideo(files,callback){
                         draw(ctx, document.getElementById(`${sourceWindow.name}Video`), 0, 0, canvas.width, canvas.height);
                     }
                 }); 
-                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx.closed){
+                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
                     mainOutputWindowPrx = window.open("output.html", "main", "popup");
                 }
-                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx.closed){
+                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed){
                     prosceOutputWindowPrx = window.open("output.html", "prosce", "popup");
                 }
                 console.log({mainOutputWindowPrx, prosceOutputWindowPrx});
