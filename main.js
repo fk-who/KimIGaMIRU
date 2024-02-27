@@ -347,7 +347,7 @@ function setVideo(files,callback){
                     requestAnimationFrame(()=>{draw(ctx, image, dx, dy, dWidth, dHeight)});
                 }
                 window.addEventListener("message", (event) => {
-                    if (event.origin !== "http://127.0.0.1:5500") return;
+                    if (event.origin !== "https://kimigamiru.pages.dev") return;
                     if (event.data == "DOMContentLoaded"){
                         console.log("message", event)
                         console.log(event.source.name)

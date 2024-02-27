@@ -1,6 +1,6 @@
 window.addEventListener("DOMContentLoaded", ()=>{
     // DOMContentLoaded を親ウィンドウに知らせる
-    window.opener.postMessage("DOMContentLoaded", "http://127.0.0.1:5500")
+    window.opener.postMessage("DOMContentLoaded", "https://kimigamiru.pages.dev")
     
     // ウィンドウリサイズ時の処理
     let output = document.getElementById("output");
