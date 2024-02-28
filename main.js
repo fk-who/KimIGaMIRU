@@ -57,7 +57,6 @@ function setVideo(files,callback){
     const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
     const autoSyncCheck = document.getElementById("autoSync");
     const openWindowButton = document.getElementById("openWindow");
-    const previewCanvas = document.getElementById("preview");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -350,6 +349,10 @@ function setVideo(files,callback){
                         let sourceWindow = event.source
                         sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
                         sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}, "https://kimigamiru.pages.dev");
+
+                    }else if (event.data.action == "success"){
+                        openWindowButton.innerText = "success";
+                        openWindowButton.disabled = true;
                     }
                 }); 
                 if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
