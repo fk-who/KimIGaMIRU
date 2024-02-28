@@ -373,6 +373,9 @@ function setVideo(files,callback){
                 }
             });
             openWindowButton.disabled = false;
+            document.getElementById("openSecondWindow").addEventListener("click", ()=>{
+                window.open(location.href, "secondWindow")
+            })
         });
 
         // ズレ修正処理
