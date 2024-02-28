@@ -359,17 +359,17 @@ function setVideo(files,callback){
                         }
                     }
                 }); 
-                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed || mainOutputWindowPrx.opener !== self){
+                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
                     mainOutputWindowPrx = window.open("output.html", "main", "popup");
-                // }else if (mainOutputWindowPrx.opener !== self){
-                //     mainOutputWindowPrx.opener = self
-                //     mainOutputWindowPrx.postMessage({action: "draw", imageId:`mainVideo`}/* , "https://kimigamiru.pages.dev" */);
+                }else if (mainOutputWindowPrx.opener !== self){
+                    mainOutputWindowPrx.opener = self
+                    mainOutputWindowPrx.postMessage({action: "draw", imageId:`mainVideo`}/* , "https://kimigamiru.pages.dev" */);
                 }
-                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed || prosceOutputWindowPrx.opener !== self){
+                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed){
                     prosceOutputWindowPrx = window.open("output.html", "prosce", "popup");
-                // }else if (prosceOutputWindowPrx.opener !== self){
-                //     prosceOutputWindowPrx.opener = self
-                //     prosceOutputWindowPrx.postMessage({action: "draw", imageId:`prosceVideo`}/* , "https://kimigamiru.pages.dev" */);
+                }else if (prosceOutputWindowPrx.opener !== self){
+                    prosceOutputWindowPrx.opener = self
+                    prosceOutputWindowPrx.postMessage({action: "draw", imageId:`prosceVideo`}/* , "https://kimigamiru.pages.dev" */);
                 }
                 console.log({mainOutputWindowPrx, prosceOutputWindowPrx});
                 if(mainOutputWindowPrx && prosceOutputWindowPrx){
