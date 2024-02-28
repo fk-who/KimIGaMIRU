@@ -364,15 +364,9 @@ function setVideo(files,callback){
                 }); 
                 if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed || mainOutputWindowPrx.opener !== self){
                     mainOutputWindowPrx = window.open("output.html", "main", "popup");
-                // }else if (mainOutputWindowPrx.opener !== self){
-                //     mainOutputWindowPrx.opener = self
-                //     mainOutputWindowPrx.postMessage({action: "draw", imageId:`mainVideo`}/* , "https://kimigamiru.pages.dev" */);
                 }
                 if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed || prosceOutputWindowPrx.opener !== self){
                     prosceOutputWindowPrx = window.open("output.html", "prosce", "popup");
-                // }else if (prosceOutputWindowPrx.opener !== self){
-                //     prosceOutputWindowPrx.opener = self
-                //     prosceOutputWindowPrx.postMessage({action: "draw", imageId:`prosceVideo`}/* , "https://kimigamiru.pages.dev" */);
                 }
                 console.log({mainOutputWindowPrx, prosceOutputWindowPrx});
                 if(mainOutputWindowPrx && prosceOutputWindowPrx){
@@ -545,6 +539,11 @@ function addDomEvents(){
     }
     whenChangeFormat(); // デフォルトの仕様設定
     FORMAT_SELECTBOX.addEventListener("change", whenChangeFormat);
+
+    // もう一つ開く
+    document.getElementById("openSecondWindow").addEventListener("click", ()=>{
+        window.open(location.href)
+    });
 
     // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});
