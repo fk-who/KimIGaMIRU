@@ -49,7 +49,9 @@ function fileSelect(e){
 
 function setVideo(files,callback){
     const prosce =  document.getElementById("prosceVideo");
+    const prosceInfoStatus = document.querySelector("span.info-prosce-status");
     const main =  document.getElementById("mainVideo");
+    const mainInfoStatus = document.querySelector("span.info-main-status");
     const videos = document.querySelectorAll("video");
     const playButton = document.getElementById("play");
     const syncButton = document.getElementById("sync");
@@ -184,13 +186,13 @@ function setVideo(files,callback){
             if (prosce.duration <= main.duration){
                 parentVideo = prosce;
                 childVideo = main;
-                parentInfoStatus = document.querySelector("span.info-prosce-status");
-                childInfoStatus = document.querySelector("span.info-main-status");
+                parentInfoStatus = prosceInfoStatus;
+                childInfoStatus = mainInfoStatus;
             }else{
                 parentVideo = main;
                 childVideo = prosce;
-                parentInfoStatus = document.querySelector("span.info-main-status");
-                childInfoStatus = document.querySelector("span.info-prosce-status");
+                parentInfoStatus = mainInfoStatus;
+                childInfoStatus = prosceInfoStatus;
             }
             console.log("parent:", parentVideo);
             parentVideo.controls = true;
