@@ -353,8 +353,11 @@ function setVideo(files,callback){
                         sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}, "https://kimigamiru.pages.dev");
 
                     }else if (event.data.action == "success"){
-                        openWindowButton.innerText = "success";
-                        openWindowButton.disabled = true;
+                        if (event.source.name == "main"){
+                            mainInfoStatus.innerText = "success";
+                        }else if(event.source.name == "prosce"){
+                            prosceInfoStatus.innerText = "success";
+                        }
                     }
                 }); 
                 if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
