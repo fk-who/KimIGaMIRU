@@ -12,6 +12,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
             console.log("message", event.data);
             let image = window.opener.document.getElementById(event.data.imageId);
             draw(image);
+            window.opener.postMessage({action: "success"}/* , "https://kimigamiru.pages.dev" */);
         }
     })
     
