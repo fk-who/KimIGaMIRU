@@ -49,7 +49,9 @@ function fileSelect(e){
 
 function setVideo(files,callback){
     const prosce =  document.getElementById("prosceVideo");
+    const prosceInfoStatus = document.querySelector("span.info-prosce-status");
     const main =  document.getElementById("mainVideo");
+    const mainInfoStatus = document.querySelector("span.info-main-status");
     const videos = document.querySelectorAll("video");
     const playButton = document.getElementById("play");
     const syncButton = document.getElementById("sync");
@@ -184,13 +186,13 @@ function setVideo(files,callback){
             if (prosce.duration <= main.duration){
                 parentVideo = prosce;
                 childVideo = main;
-                parentInfoStatus = document.querySelector("span.info-prosce-status");
-                childInfoStatus = document.querySelector("span.info-main-status");
+                parentInfoStatus = prosceInfoStatus;
+                childInfoStatus = mainInfoStatus;
             }else{
                 parentVideo = main;
                 childVideo = prosce;
-                parentInfoStatus = document.querySelector("span.info-main-status");
-                childInfoStatus = document.querySelector("span.info-prosce-status");
+                parentInfoStatus = mainInfoStatus;
+                childInfoStatus = prosceInfoStatus;
             }
             console.log("parent:", parentVideo);
             parentVideo.controls = true;
@@ -349,16 +351,18 @@ function setVideo(files,callback){
                         let sourceWindow = event.source
                         sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
                         sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}, "https://kimigamiru.pages.dev");
-
                     }else if (event.data.action == "success"){
-                        openWindowButton.innerText = "success";
-                        openWindowButton.disabled = true;
+                        if (event.source.name == "main"){
+                            mainInfoStatus.innerText = "success";
+                        }else if(event.source.name == "prosce"){
+                            prosceInfoStatus.innerText = "success";
+                        }
                     }
                 }); 
-                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
+                if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed || mainOutputWindowPrx.opener !== self){
                     mainOutputWindowPrx = window.open("output.html", "main", "popup");
                 }
-                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed){
+                if(prosceOutputWindowPrx === undefined || prosceOutputWindowPrx === null || prosceOutputWindowPrx.closed || prosceOutputWindowPrx.opener !== self){
                     prosceOutputWindowPrx = window.open("output.html", "prosce", "popup");
                 }
                 console.log({mainOutputWindowPrx, prosceOutputWindowPrx});
