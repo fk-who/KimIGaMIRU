@@ -1,6 +1,19 @@
 window.addEventListener("DOMContentLoaded", ()=>{
-    // DOMContentLoaded を親ウィンドウに知らせる
-    window.opener.postMessage("DOMContentLoaded", "https://kimigamiru.pages.dev")
+    const canvas = document.getElementById("output");
+    const ctx = canvas.getContext("2d");
+    function draw(image){
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(()=>{draw(image)});
+    }
+    
+    window.addEventListener("message", (event)=>{
+        if (event.origin !== "https://kimigamiru.pages.dev") return;
+        if (event.data.action == "draw"){
+            console.log("message", event.data);
+            let image = window.opener.document.getElementById(event.data.imageId);
+            draw(image);
+        }
+    })
     
     // ウィンドウリサイズ時の処理
     let output = document.getElementById("output");
@@ -22,4 +35,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
         }   
     });
     document.addEventListener("fullscreenchange",()=>{overlay.classList.add("nodisplay")})
+
+    // DOMContentLoaded を親ウィンドウに知らせる
+    window.opener.postMessage({action: "DOMContentLoaded"} , "https://kimigamiru.pages.dev");
 })
