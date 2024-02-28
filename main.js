@@ -57,6 +57,7 @@ function setVideo(files,callback){
     const playWhenCanplayEventCheck = document.getElementById("playWhenCanplayEvent");
     const autoSyncCheck = document.getElementById("autoSync");
     const openWindowButton = document.getElementById("openWindow");
+    const previewCanvas = document.getElementById("preview");
 
     // スクロールアニメーションを非表示に
     document.querySelector("div.scroll-animation").style.display = "none";
@@ -342,20 +343,13 @@ function setVideo(files,callback){
             let mainOutputWindowPrx;
             let prosceOutputWindowPrx;
             openWindowButton.addEventListener("click", ()=>{
-                function draw(ctx, image, dx, dy, dWidth, dHeight){
-                    ctx.drawImage(image, dx, dy, dWidth, dHeight);
-                    requestAnimationFrame(()=>{draw(ctx, image, dx, dy, dWidth, dHeight)});
-                }
                 window.addEventListener("message", (event) => {
-                    if (event.origin !== "https://kimigamiru.pages.dev") return;
-                    if (event.data == "DOMContentLoaded"){
-                        console.log("message", event)
-                        console.log(event.source.name)
+                    // if (event.origin !== "https://kimigamiru.pages.dev") return;
+                    if (event.data.action == "DOMContentLoaded"){
+                        console.log("message", event.source.name, event)
                         let sourceWindow = event.source
                         sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
-                        canvas = sourceWindow.document.getElementById("output");
-                        ctx = canvas.getContext("2d");
-                        draw(ctx, document.getElementById(`${sourceWindow.name}Video`), 0, 0, canvas.width, canvas.height);
+                        sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`});
                     }
                 }); 
                 if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
