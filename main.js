@@ -351,7 +351,6 @@ function setVideo(files,callback){
                         let sourceWindow = event.source
                         sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
                         sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}, "https://kimigamiru.pages.dev");
-
                     }else if (event.data.action == "success"){
                         if (event.source.name == "main"){
                             mainInfoStatus.innerText = "success";
