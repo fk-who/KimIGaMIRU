@@ -373,9 +373,6 @@ function setVideo(files,callback){
                 }
             });
             openWindowButton.disabled = false;
-            document.getElementById("openSecondWindow").addEventListener("click", ()=>{
-                window.open(location.href)
-            })
         });
 
         // ズレ修正処理
@@ -539,6 +536,11 @@ function addDomEvents(){
     }
     whenChangeFormat(); // デフォルトの仕様設定
     FORMAT_SELECTBOX.addEventListener("change", whenChangeFormat);
+
+    // もう一つ開く
+    document.getElementById("openSecondWindow").addEventListener("click", ()=>{
+        window.open(location.href)
+    });
 
     // デバッグ用関数設定
     document.querySelector("footer").addEventListener("click", ()=>{(CNT[0] > 8)? dbg() : CNT[0]++});
