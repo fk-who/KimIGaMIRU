@@ -3,9 +3,6 @@ console.log("main.js v0.08");
 let FILES = 0;
 let CNT = [0, 0]; // 連打要素の連打数カウント用
 
-let mainOutputWindowPrx;
-let prosceOutputWindowPrx;
-
 const FORMATS = {
     default: "kimitomiku2023",
     list: {
@@ -344,8 +341,8 @@ function setVideo(files,callback){
             }
 
             // 別ウィンドウで再生する機能
-            // let mainOutputWindowPrx;
-            // let prosceOutputWindowPrx;
+            let mainOutputWindowPrx;
+            let prosceOutputWindowPrx;
             openWindowButton.addEventListener("click", ()=>{
                 window.addEventListener("message", (event) => {
                     // if (event.origin !== "https://kimigamiru.pages.dev") return;
