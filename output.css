@@ -58,7 +58,7 @@ canvas {
         opacity: 0;
         transition: opacity, 0.6s;
         filter: drop-shadow(0 0 0.3rem white);
-        color: dimgray;
+        color: black;
         
     }
     @media (hover: hover) {
