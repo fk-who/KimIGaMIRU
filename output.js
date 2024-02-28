@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
     }
     
     window.addEventListener("message", (event)=>{
-        if (event.origin !== "https://kimigamiru.pages.dev") return;
+        // if (event.origin !== "https://kimigamiru.pages.dev") return;
         if (event.data.action == "draw"){
             console.log("message", event.data);
             let image = window.opener.document.getElementById(event.data.imageId);
@@ -37,5 +37,5 @@ window.addEventListener("DOMContentLoaded", ()=>{
     document.addEventListener("fullscreenchange",()=>{overlay.classList.add("nodisplay")})
 
     // DOMContentLoaded を親ウィンドウに知らせる
-    window.opener.postMessage({action: "DOMContentLoaded"} , "https://kimigamiru.pages.dev");
+    window.opener.postMessage({action: "DOMContentLoaded"}/* , "https://kimigamiru.pages.dev" */);
 })

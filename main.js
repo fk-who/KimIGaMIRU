@@ -344,12 +344,12 @@ function setVideo(files,callback){
             let prosceOutputWindowPrx;
             openWindowButton.addEventListener("click", ()=>{
                 window.addEventListener("message", (event) => {
-                    if (event.origin !== "https://kimigamiru.pages.dev") return;
+                    // if (event.origin !== "https://kimigamiru.pages.dev") return;
                     if (event.data.action == "DOMContentLoaded"){
                         console.log("message", event.source.name, event)
                         let sourceWindow = event.source
                         sourceWindow.document.title = sourceWindow.name + " screen output | KGM - KTM映像確認ツール";
-                        sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}, "https://kimigamiru.pages.dev");
+                        sourceWindow.postMessage({action: "draw", imageId:`${sourceWindow.name}Video`}/* , "https://kimigamiru.pages.dev" */);
                     }
                 }); 
                 if(mainOutputWindowPrx === undefined || mainOutputWindowPrx === null || mainOutputWindowPrx.closed){
